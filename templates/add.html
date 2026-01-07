@@ -12,7 +12,7 @@
 <form method="POST" action="{{ url_for('add_carte_grise') }}">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     
-    <h3>Informations du Propriétaire</h3>
+    <h3 style="margin-top: 20px; color: var(--primary-color);">Informations du Propriétaire</h3>
     
     <div class="form-row">
         <div class="form-group">
@@ -31,13 +31,67 @@
         <input type="text" id="adresse" name="adresse" required placeholder="15 Rue de la Paix, 75001 Paris">
     </div>
     
-    <h3>Informations du Véhicule</h3>
+    <h3 style="margin-top: 20px; color: var(--primary-color);">Informations du Véhicule</h3>
     
     <div class="form-row">
         <div class="form-group">
             <label for="modele_id">Marque et Modèle *</label>
             <select id="modele_id" name="modele_id" required>
                 <option value="">-- Sélectionnez un modèle --</option>
+                <optgroup label="Honda">
+                <option value="1">Honda - CB500F (Deux roues - A2)</option>
+                <option value="2">Honda - CBR1000RR (Deux roues - A)</option>
+                <option value="3">Honda - Civic (Automobile - B)</option>
+                <option value="4">Honda - CR-V (Automobile - B)</option>
+                <option value="5">Honda - NT400 (Camion léger - C)</option>
+                <option value="6">Honda - Cabstar 35 (Camion léger - C)</option>
+            </optgroup>
+
+            <optgroup label="Peugeot">
+                <option value="7">Peugeot - Kisbee 50 (Deux roues - A1)</option>
+                <option value="8">Peugeot - Metropolis (Deux roues - A)</option>
+                <option value="9">Peugeot - 208 (Automobile - B)</option>
+                <option value="10">Peugeot - 5008 (Automobile - B)</option>
+                <option value="11">Peugeot - Boxer 440 (Camion léger - C)</option>
+                <option value="12">Peugeot - Expert L3 (Camion léger - C)</option>
+            </optgroup>
+
+            <optgroup label="Renault">
+                <option value="13">Renault - Full 125 (Deux roues - A1)</option>
+                <option value="14">Renault - Sport 400 (Deux roues - A2)</option>
+                <option value="15">Renault - Clio (Automobile - B)</option>
+                <option value="16">Renault - Austral (Automobile - B)</option>
+                <option value="17">Renault - Master 3.5t (Camion léger - C)</option>
+                <option value="18">Renault - Maxity (Camion léger - C)</option>
+            </optgroup>
+
+            <optgroup label="Mercedes-Benz">
+                <option value="19">Mercedes - Citan Scooter (Deux roues - A1)</option>
+                <option value="20">Mercedes - Vision GT (Deux roues - A)</option>
+                <option value="21">Mercedes - Classe A (Automobile - B)</option>
+                <option value="22">Mercedes - GLC (Automobile - B)</option>
+                <option value="23">Mercedes - Sprinter 5t (Camion léger - C)</option>
+                <option value="24">Mercedes - Vario (Camion léger - C)</option>
+            </optgroup>
+
+            <optgroup label="Iveco">
+                <option value="25">Iveco - Daily Moto (Deux roues - A2)</option>
+                <option value="26">Iveco - Turbo Bike (Deux roues - A)</option>
+                <option value="27">Iveco - Massif (Automobile - B)</option>
+                <option value="28">Iveco - Campagnola (Automobile - B)</option>
+                <option value="29">Iveco - Daily 35C (Camion léger - C)</option>
+                <option value="30">Iveco - Daily 50C (Camion léger - C)</option>
+            </optgroup>
+
+            <optgroup label="Ford">
+                <option value="31">Ford - Street 125 (Deux roues - A1)</option>
+                <option value="32">Ford - Ranger Bike (Deux roues - A2)</option>
+                <option value="33">Ford - Fiesta (Automobile - B)</option>
+                <option value="34">Ford - Focus (Automobile - B)</option>
+                <option value="35">Ford - Transit 350 (Camion léger - C)</option>
+                <option value="36">Ford - Transit 470 (Camion léger - C)</option>
+            </optgroup>
+            
                 {% for modele in modeles %}
                 <option value="{{ modele.id }}">{{ modele.marque_nom }} - {{ modele.modele }} ({{ modele.categorie_nom }})</option>
                 {% endfor %}
@@ -81,7 +135,7 @@
         </div>
     </div>
     
-    <h3>Caractéristiques Techniques (Optionnel)</h3>
+    <h3 style="margin-top: 20px; color: var(--primary-color);">Caractéristiques Techniques (Optionnel)</h3>
     
     <div class="form-row">
         <div class="form-group">
@@ -100,7 +154,7 @@
         <input type="number" id="emission_co2" name="emission_co2" min="0" placeholder="110">
     </div>
     
-    <div class="actions">
+    <div class="actions" style="margin-top: 30px;">
         <button type="submit" class="btn btn-success">💾 Créer la Carte Grise</button>
         <a href="{{ url_for('index') }}" class="btn btn-secondary">❌ Annuler</a>
     </div>
