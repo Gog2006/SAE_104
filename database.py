@@ -2,9 +2,14 @@ import mysql.connector
 from mysql.connector import Error
 import os
 from dotenv import load_dotenv
+import logging
 
 # Load environment variables
 load_dotenv()
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 class Database:
     """Database connection and operations handler"""
@@ -28,17 +33,17 @@ class Database:
                 port=self.port
             )
             if self.connection.is_connected():
-                print("Successfully connected to MySQL database")
+                logger.info("Successfully connected to MySQL database")
                 return True
         except Error as e:
-            print(f"Error connecting to MySQL database: {e}")
+            logger.error(f"Error connecting to MySQL database: {e}")
             return False
     
     def disconnect(self):
         """Close database connection"""
         if self.connection and self.connection.is_connected():
             self.connection.close()
-            print("MySQL connection closed")
+            logger.info("MySQL connection closed")
     
     def execute_query(self, query, params=None):
         """Execute a query that modifies data (INSERT, UPDATE, DELETE)"""
@@ -52,7 +57,7 @@ class Database:
             cursor.close()
             return True
         except Error as e:
-            print(f"Error executing query: {e}")
+            logger.error(f"Error executing query: {e}")
             return False
     
     def fetch_all(self, query, params=None):
@@ -67,7 +72,7 @@ class Database:
             cursor.close()
             return result
         except Error as e:
-            print(f"Error fetching data: {e}")
+            logger.error(f"Error fetching data: {e}")
             return []
     
     def fetch_one(self, query, params=None):
@@ -82,5 +87,5 @@ class Database:
             cursor.close()
             return result
         except Error as e:
-            print(f"Error fetching data: {e}")
+            logger.error(f"Error fetching data: {e}")
             return None

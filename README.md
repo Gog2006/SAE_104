@@ -69,6 +69,14 @@ DB_USER=root
 DB_PASSWORD=your_password
 DB_NAME=sae_104_db
 DB_PORT=3306
+
+# Important: Set a strong secret key for production
+SECRET_KEY=your-strong-random-secret-key-here
+```
+
+**Note**: For production deployment, generate a strong random SECRET_KEY using:
+```bash
+python -c "import os; print(os.urandom(24).hex())"
 ```
 
 ### Step 4: Create Database and Tables

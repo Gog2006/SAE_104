@@ -5,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Student Management System{% endblock %}</title>
     <style>
+        :root {
+            --primary-color: #667eea;
+            --primary-hover: #5568d3;
+            --secondary-color: #764ba2;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --danger-hover: #c0392b;
+            --grey-color: #95a5a6;
+            --grey-hover: #7f8c8d;
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -13,7 +24,7 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             min-height: 100vh;
             padding: 20px;
         }
@@ -31,7 +42,7 @@
             text-align: center;
             margin-bottom: 30px;
             padding-bottom: 20px;
-            border-bottom: 3px solid #667eea;
+            border-bottom: 3px solid var(--primary-color);
         }
         
         h1 {
@@ -41,7 +52,7 @@
         }
         
         h2 {
-            color: #667eea;
+            color: var(--primary-color);
             margin-bottom: 20px;
         }
         
@@ -54,7 +65,7 @@
         
         .btn {
             padding: 12px 24px;
-            background: #667eea;
+            background: var(--primary-color);
             color: white;
             text-decoration: none;
             border-radius: 5px;
@@ -66,23 +77,23 @@
         }
         
         .btn:hover {
-            background: #5568d3;
+            background: var(--primary-hover);
         }
         
         .btn-danger {
-            background: #e74c3c;
+            background: var(--danger-color);
         }
         
         .btn-danger:hover {
-            background: #c0392b;
+            background: var(--danger-hover);
         }
         
         .btn-secondary {
-            background: #95a5a6;
+            background: var(--grey-color);
         }
         
         .btn-secondary:hover {
-            background: #7f8c8d;
+            background: var(--grey-hover);
         }
         
         .flash-messages {
@@ -96,12 +107,12 @@
         }
         
         .flash.success {
-            background: #2ecc71;
+            background: var(--success-color);
             color: white;
         }
         
         .flash.error {
-            background: #e74c3c;
+            background: var(--danger-color);
             color: white;
         }
         
@@ -118,7 +129,7 @@
         }
         
         th {
-            background: #667eea;
+            background: var(--primary-color);
             color: white;
             font-weight: bold;
         }
@@ -150,7 +161,7 @@
         
         input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--primary-color);
         }
         
         .actions {
