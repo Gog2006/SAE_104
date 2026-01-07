@@ -1,17 +1,38 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
+from flask_wtf.csrf import CSRFProtect
 from database import Database
+import os
+import re
 
 app = Flask(__name__)
-app.secret_key = 'your-secret-key-here'  # Change this in production
+app.secret_key = os.getenv('SECRET_KEY', os.urandom(24).hex())
+
+# Enable CSRF protection
+csrf = CSRFProtect(app)
 
 # Initialize database
 db = Database()
+
+def validate_email(email):
+    """Validate email format"""
+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    return re.match(pattern, email) is not None
+
+def sanitize_input(text):
+    """Basic input sanitization to prevent XSS"""
+    if text is None:
+        return None
+    # Remove potential HTML/script tags and their content
+    text = re.sub(r'<script[^>]*>.*?</script>', '', str(text), flags=re.DOTALL | re.IGNORECASE)
+    text = re.sub(r'<[^>]*>', '', text)
+    return text.strip()
 
 @app.before_request
 def before_request():
     """Connect to database before each request"""
     if not db.connection or not db.connection.is_connected():
-        db.connect()
+        if not db.connect():
+            flash('Database connection failed. Please check your configuration.', 'error')
 
 @app.teardown_appcontext
 def teardown_db(exception=None):
@@ -28,14 +49,19 @@ def index():
 def add_student():
     """Add new student"""
     if request.method == 'POST':
-        name = request.form.get('name')
-        email = request.form.get('email')
+        name = sanitize_input(request.form.get('name'))
+        email = sanitize_input(request.form.get('email'))
         age = request.form.get('age')
-        major = request.form.get('major')
+        major = sanitize_input(request.form.get('major'))
         
         # Validate input
         if not name or not email:
             flash('Name and email are required!', 'error')
+            return redirect(url_for('add_student'))
+        
+        # Validate email format
+        if not validate_email(email):
+            flash('Invalid email format!', 'error')
             return redirect(url_for('add_student'))
         
         # Insert into database
@@ -54,14 +80,19 @@ def add_student():
 def edit_student(student_id):
     """Edit existing student"""
     if request.method == 'POST':
-        name = request.form.get('name')
-        email = request.form.get('email')
+        name = sanitize_input(request.form.get('name'))
+        email = sanitize_input(request.form.get('email'))
         age = request.form.get('age')
-        major = request.form.get('major')
+        major = sanitize_input(request.form.get('major'))
         
         # Validate input
         if not name or not email:
             flash('Name and email are required!', 'error')
+            return redirect(url_for('edit_student', student_id=student_id))
+        
+        # Validate email format
+        if not validate_email(email):
+            flash('Invalid email format!', 'error')
             return redirect(url_for('edit_student', student_id=student_id))
         
         # Update in database
@@ -95,4 +126,7 @@ def delete_student(student_id):
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    debug_mode = os.getenv('FLASK_DEBUG', 'False').lower() == 'true'
+    host = os.getenv('FLASK_HOST', '127.0.0.1')
+    port = int(os.getenv('FLASK_PORT', '5000'))
+    app.run(debug=debug_mode, host=host, port=port)

@@ -6,6 +6,8 @@
 <h2>✏️ Edit Student</h2>
 
 <form method="POST" action="{{ url_for('edit_student', student_id=student.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    
     <div class="form-group">
         <label for="name">Name *</label>
         <input type="text" id="name" name="name" required value="{{ student.name }}" placeholder="Enter student name">
