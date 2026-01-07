@@ -12,13 +12,13 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 class Database:
-    """Database connection and operations handler"""
+    """Database connection and operations handler for vehicle registration system"""
     
     def __init__(self):
         self.host = os.getenv('DB_HOST', 'localhost')
         self.user = os.getenv('DB_USER', 'root')
         self.password = os.getenv('DB_PASSWORD', '')
-        self.database = os.getenv('DB_NAME', 'sae_104_db')
+        self.database = os.getenv('DB_NAME', 'carte_grise_db')
         self.port = int(os.getenv('DB_PORT', '3306'))
         self.connection = None
     
@@ -54,8 +54,9 @@ class Database:
             else:
                 cursor.execute(query)
             self.connection.commit()
+            last_id = cursor.lastrowid
             cursor.close()
-            return True
+            return last_id if last_id else True
         except Error as e:
             logger.error(f"Error executing query: {e}")
             return False

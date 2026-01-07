@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Student Management System{% endblock %}</title>
+    <title>{% block title %}Système de Gestion des Cartes Grises{% endblock %}</title>
     <style>
         :root {
-            --primary-color: #667eea;
-            --primary-hover: #5568d3;
-            --secondary-color: #764ba2;
-            --success-color: #2ecc71;
+            --primary-color: #2c3e50;
+            --primary-hover: #34495e;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
             --danger-color: #e74c3c;
             --danger-hover: #c0392b;
             --grey-color: #95a5a6;
@@ -30,7 +30,7 @@
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             background: white;
             border-radius: 10px;
@@ -61,6 +61,7 @@
             gap: 15px;
             justify-content: center;
             margin-bottom: 30px;
+            flex-wrap: wrap;
         }
         
         .btn {
@@ -78,6 +79,14 @@
         
         .btn:hover {
             background: var(--primary-hover);
+        }
+        
+        .btn-success {
+            background: var(--success-color);
+        }
+        
+        .btn-success:hover {
+            background: #229954;
         }
         
         .btn-danger {
@@ -120,10 +129,11 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            font-size: 14px;
         }
         
         th, td {
-            padding: 12px;
+            padding: 10px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
@@ -132,6 +142,8 @@
             background: var(--primary-color);
             color: white;
             font-weight: bold;
+            position: sticky;
+            top: 0;
         }
         
         tr:hover {
@@ -150,8 +162,9 @@
         }
         
         input[type="text"],
-        input[type="email"],
-        input[type="number"] {
+        input[type="date"],
+        input[type="number"],
+        select {
             width: 100%;
             padding: 10px;
             border: 2px solid #ddd;
@@ -159,7 +172,7 @@
             font-size: 16px;
         }
         
-        input:focus {
+        input:focus, select:focus {
             outline: none;
             border-color: var(--primary-color);
         }
@@ -175,18 +188,47 @@
             color: #999;
             font-size: 18px;
         }
+        
+        .info-box {
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            table {
+                font-size: 12px;
+            }
+            
+            th, td {
+                padding: 8px 5px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>📚 Student Management System</h1>
-            <p>Python + MySQL + HTML Interface</p>
+            <h1>🚗 Système de Gestion des Cartes Grises</h1>
+            <p>SAE 1.04 - Base de données des cartes grises</p>
         </header>
         
         <nav class="nav">
-            <a href="{{ url_for('index') }}" class="btn">🏠 View All Students</a>
-            <a href="{{ url_for('add_student') }}" class="btn">➕ Add Student</a>
+            <a href="{{ url_for('index') }}" class="btn">🏠 Toutes les cartes</a>
+            <a href="{{ url_for('add_carte_grise') }}" class="btn btn-success">➕ Nouvelle carte</a>
+            <a href="{{ url_for('search') }}" class="btn btn-secondary">🔍 Rechercher</a>
         </nav>
         
         {% with messages = get_flashed_messages(with_categories=true) %}
