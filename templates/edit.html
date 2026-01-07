@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Modifier Carte Grise{% endblock %}
+
+{% block content %}
+<h2>✏️ Modifier la Carte Grise</h2>
+
+<div class="info-box">
+    <p><strong>Carte Grise:</strong> {{ carte.numero_carte_grise }}</p>
+    <p><strong>Plaque:</strong> {{ carte.numero_immatriculation[:2] }} {{ carte.numero_immatriculation[2:5] }} {{ carte.numero_immatriculation[5:] }}</p>
+    <p><strong>Propriétaire:</strong> {{ carte.nom }} {{ carte.prenom }}</p>
+    <p><strong>Véhicule:</strong> {{ carte.marque_nom }} {{ carte.modele }}</p>
+</div>
+
+<form method="POST" action="{{ url_for('edit_carte_grise', carte_id=carte.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    
+    <h3 style="margin-top: 20px; color: var(--primary-color);">Caractéristiques Modifiables</h3>
+    
+    <div class="form-row">
+        <div class="form-group">
+            <label for="poids_vide">Poids à vide (kg)</label>
+            <input type="number" id="poids_vide" name="poids_vide" value="{{ carte.poids_vide_kg }}" min="100">
+        </div>
+        
+        <div class="form-group">
+            <label for="poids_max">Poids maximal (kg)</label>
+            <input type="number" id="poids_max" name="poids_max" value="{{ carte.poids_max_kg }}" min="100">
+        </div>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-group">
+            <label for="cylindree">Cylindrée (cm³)</label>
+            <input type="number" id="cylindree" name="cylindree" value="{{ carte.cylindree_cm3 if carte.cylindree_cm3 else '' }}" min="0">
+        </div>
+        
+        <div class="form-group">
+            <label for="puissance_chevaux">Puissance (chevaux)</label>
+            <input type="number" id="puissance_chevaux" name="puissance_chevaux" value="{{ carte.puissance_chevaux if carte.puissance_chevaux else '' }}" min="0">
+        </div>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-group">
+            <label for="emission_co2">Émission CO2 (g/km)</label>
+            <input type="number" id="emission_co2" name="emission_co2" value="{{ carte.emission_co2_g_km if carte.emission_co2_g_km else '' }}" min="0">
+        </div>
+        
+        <div class="form-group">
+            <label for="classe_environnementale">Classe Environnementale</label>
+            <input type="text" id="classe_environnementale" name="classe_environnementale" value="{{ carte.classe_environnementale if carte.classe_environnementale else '' }}" placeholder="Euro 6">
+        </div>
+    </div>
+    
+    <div class="actions" style="margin-top: 30px;">
+        <button type="submit" class="btn btn-success">💾 Mettre à jour</button>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">❌ Annuler</a>
+    </div>
+</form>
+{% endblock %}

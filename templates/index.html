@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Liste des Cartes Grises{% endblock %}
+
+{% block content %}
+<h2>📋 Liste des Cartes Grises</h2>
+
+{% if cartes %}
+<div style="overflow-x: auto;">
+    <table>
+        <thead>
+            <tr>
+                <th>N° Carte</th>
+                <th>Plaque</th>
+                <th>Propriétaire</th>
+                <th>Marque/Modèle</th>
+                <th>Date Immat.</th>
+                <th>Permis</th>
+                <th>Poids (kg)</th>
+                <th>CO2 (g/km)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for carte in cartes %}
+            <tr>
+                <td><strong>{{ carte.numero_carte_grise }}</strong></td>
+                <td><strong>{{ carte.numero_immatriculation[:2] }} {{ carte.numero_immatriculation[2:5] }} {{ carte.numero_immatriculation[5:] }}</strong></td>
+                <td>{{ carte.nom }} {{ carte.prenom }}</td>
+                <td>{{ carte.marque_nom }} {{ carte.modele }}</td>
+                <td>{{ carte.date_immat_actuelle.strftime('%d/%m/%Y') if carte.date_immat_actuelle else 'N/A' }}</td>
+                <td>{{ carte.categorie_permis }}</td>
+                <td>{{ carte.poids_vide_kg }} / {{ carte.poids_max_kg }}</td>
+                <td>{{ carte.emission_co2_g_km if carte.emission_co2_g_km else 'N/A' }}</td>
+                <td>
+                    <div class="actions">
+                        <a href="{{ url_for('edit_carte_grise', carte_id=carte.id) }}" class="btn" style="padding: 6px 12px; font-size: 14px;">✏️ Modifier</a>
+                        <form method="POST" action="{{ url_for('delete_carte_grise', carte_id=carte.id) }}" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette carte grise?');">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                            <button type="submit" class="btn btn-danger" style="padding: 6px 12px; font-size: 14px;">🗑️ Supprimer</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="info-box" style="margin-top: 20px;">
+    <strong>Total: {{ cartes|length }} carte(s) grise(s)</strong>
+</div>
+{% else %}
+<div class="no-data">
+    <p>Aucune carte grise dans la base de données.</p>
+    <p>Cliquez sur "Nouvelle carte" pour ajouter la première carte grise!</p>
+</div>
+{% endif %}
+{% endblock %}

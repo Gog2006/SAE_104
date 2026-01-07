@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Rechercher Cartes Grises{% endblock %}
+
+{% block content %}
+<h2>🔍 Rechercher et Filtrer</h2>
+
+<form method="POST" action="{{ url_for('search') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    
+    <div class="form-row">
+        <div class="form-group">
+            <label for="search_type">Type de recherche</label>
+            <select id="search_type" name="search_type" required>
+                <option value="">-- Sélectionnez --</option>
+                <option value="nom">Par nom de propriétaire</option>
+                <option value="plaque">Par numéro de plaque</option>
+                <option value="marque">Statistiques par marque</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="search_value">Valeur de recherche</label>
+            <input type="text" id="search_value" name="search_value" placeholder="Ex: Dupont, BE, Peugeot">
+        </div>
+    </div>
+    
+    <div class="actions">
+        <button type="submit" class="btn btn-success">🔍 Rechercher</button>
+        <a href="{{ url_for('search') }}" class="btn btn-secondary">🔄 Réinitialiser</a>
+    </div>
+</form>
+
+{% if cartes %}
+    <h3 style="margin-top: 30px; color: var(--primary-color);">Résultats de la recherche</h3>
+    
+    {% if cartes[0].get('count') %}
+        <!-- Statistiques par marque -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Marque</th>
+                    <th>Nombre de véhicules immatriculés</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in cartes %}
+                <tr>
+                    <td><strong>{{ result.marque_nom }}</strong></td>
+                    <td>{{ result.count }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <!-- Résultats normaux -->
+        <table>
+            <thead>
+                <tr>
+                    <th>N° Carte</th>
+                    <th>Plaque</th>
+                    <th>Propriétaire</th>
+                    <th>Marque/Modèle</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for carte in cartes %}
+                <tr>
+                    <td>{{ carte.numero_carte_grise }}</td>
+                    <td><strong>{{ carte.numero_immatriculation[:2] }} {{ carte.numero_immatriculation[2:5] }} {{ carte.numero_immatriculation[5:] }}</strong></td>
+                    <td>{{ carte.nom }} {{ carte.prenom }}</td>
+                    <td>{{ carte.marque_nom }} {{ carte.modele }}</td>
+                    <td>
+                        <a href="{{ url_for('edit_carte_grise', carte_id=carte.id) }}" class="btn" style="padding: 6px 12px; font-size: 14px;">✏️ Modifier</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <div class="info-box" style="margin-top: 20px;">
+            <strong>{{ cartes|length }} résultat(s) trouvé(s)</strong>
+        </div>
+    {% endif %}
+{% endif %}
+
+<div class="info-box" style="margin-top: 30px;">
+    <h4 style="margin-bottom: 10px;">Exemples de recherche:</h4>
+    <ul style="margin-left: 20px;">
+        <li><strong>Par nom:</strong> Rechercher "Dupont" pour trouver tous les propriétaires avec ce nom</li>
+        <li><strong>Par plaque:</strong> Rechercher "BE" pour les plaques commençant par BE, ou "AC" pour celles se terminant par AC</li>
+        <li><strong>Statistiques:</strong> Sélectionner "Statistiques par marque" pour voir le classement des marques</li>
+    </ul>
+</div>
+{% endblock %}
