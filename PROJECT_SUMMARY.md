@@ -59,7 +59,7 @@ Total: 626 lines of code
 |------------|---------|---------|
 | Python | 3.x | Backend language |
 | Flask | 3.0.0 | Web framework |
-| MySQL Connector | 8.2.0 | Database driver |
+| MySQL Connector | 9.1.0 | Database driver |
 | Flask-WTF | 1.2.1 | CSRF protection |
 | python-dotenv | 1.0.0 | Environment management |
 | email-validator | 2.1.0 | Email validation |

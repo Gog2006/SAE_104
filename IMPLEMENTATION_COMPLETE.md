@@ -186,7 +186,7 @@ students
 | Package | Version | Purpose |
 |---------|---------|---------|
 | Flask | 3.0.0 | Web framework |
-| mysql-connector-python | 8.2.0 | Database driver |
+| mysql-connector-python | 9.1.0 | Database driver |
 | python-dotenv | 1.0.0 | Environment config |
 | Flask-WTF | 1.2.1 | CSRF protection |
 | email-validator | 2.1.0 | Email validation |

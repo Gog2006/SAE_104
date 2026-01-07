@@ -15,7 +15,7 @@ A basic Python-SQL project with an HTML interface to add, view, and update infor
 - **Backend**: Python 3.x with Flask web framework
 - **Database**: MySQL/MariaDB (compatible with phpMyAdmin)
 - **Frontend**: HTML5 with embedded CSS
-- **Database Connector**: mysql-connector-python
+- **Database Connector**: mysql-connector-python 9.1.0 (patched for security)
 
 ## Project Structure
 
