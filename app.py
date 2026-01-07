@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_wtf.csrf import CSRFProtect
+from markupsafe import escape
 from database import Database
 import os
 import re
@@ -19,13 +20,11 @@ def validate_email(email):
     return re.match(pattern, email) is not None
 
 def sanitize_input(text):
-    """Basic input sanitization to prevent XSS"""
+    """Sanitize input by escaping HTML"""
     if text is None:
         return None
-    # Remove potential HTML/script tags and their content
-    text = re.sub(r'<script[^>]*>.*?</script>', '', str(text), flags=re.DOTALL | re.IGNORECASE)
-    text = re.sub(r'<[^>]*>', '', text)
-    return text.strip()
+    # Strip whitespace and escape HTML to prevent XSS
+    return str(escape(str(text).strip()))
 
 @app.before_request
 def before_request():
