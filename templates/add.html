@@ -12,7 +12,7 @@
 <form method="POST" action="{{ url_for('add_carte_grise') }}">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     
-    <h3 style="margin-top: 20px; color: var(--primary-color);">Informations du Propriétaire</h3>
+    <h3>Informations du Propriétaire</h3>
     
     <div class="form-row">
         <div class="form-group">
@@ -31,7 +31,7 @@
         <input type="text" id="adresse" name="adresse" required placeholder="15 Rue de la Paix, 75001 Paris">
     </div>
     
-    <h3 style="margin-top: 20px; color: var(--primary-color);">Informations du Véhicule</h3>
+    <h3>Informations du Véhicule</h3>
     
     <div class="form-row">
         <div class="form-group">
@@ -81,7 +81,7 @@
         </div>
     </div>
     
-    <h3 style="margin-top: 20px; color: var(--primary-color);">Caractéristiques Techniques (Optionnel)</h3>
+    <h3>Caractéristiques Techniques (Optionnel)</h3>
     
     <div class="form-row">
         <div class="form-group">
@@ -100,7 +100,7 @@
         <input type="number" id="emission_co2" name="emission_co2" min="0" placeholder="110">
     </div>
     
-    <div class="actions" style="margin-top: 30px;">
+    <div class="actions">
         <button type="submit" class="btn btn-success">💾 Créer la Carte Grise</button>
         <a href="{{ url_for('index') }}" class="btn btn-secondary">❌ Annuler</a>
     </div>

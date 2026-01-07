@@ -15,7 +15,7 @@
 <form method="POST" action="{{ url_for('edit_carte_grise', carte_id=carte.id) }}">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     
-    <h3 style="margin-top: 20px; color: var(--primary-color);">Caractéristiques Modifiables</h3>
+    <h3>Caractéristiques Modifiables</h3>
     
     <div class="form-row">
         <div class="form-group">
@@ -53,7 +53,7 @@
         </div>
     </div>
     
-    <div class="actions" style="margin-top: 30px;">
+    <div class="actions">
         <button type="submit" class="btn btn-success">💾 Mettre à jour</button>
         <a href="{{ url_for('index') }}" class="btn btn-secondary">❌ Annuler</a>
     </div>

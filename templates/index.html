@@ -6,7 +6,7 @@
 <h2>📋 Liste des Cartes Grises</h2>
 
 {% if cartes %}
-<div style="overflow-x: auto;">
+<div class="table-wrapper">
     <table>
         <thead>
             <tr>
@@ -34,10 +34,10 @@
                 <td>{{ carte.emission_co2_g_km if carte.emission_co2_g_km else 'N/A' }}</td>
                 <td>
                     <div class="actions">
-                        <a href="{{ url_for('edit_carte_grise', carte_id=carte.id) }}" class="btn" style="padding: 6px 12px; font-size: 14px;">✏️ Modifier</a>
-                        <form method="POST" action="{{ url_for('delete_carte_grise', carte_id=carte.id) }}" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette carte grise?');">
+                        <a href="{{ url_for('edit_carte_grise', carte_id=carte.id) }}" class="btn btn-small">✏️ Modifier</a>
+                        <form method="POST" action="{{ url_for('delete_carte_grise', carte_id=carte.id) }}" class="actions-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette carte grise?');">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                            <button type="submit" class="btn btn-danger" style="padding: 6px 12px; font-size: 14px;">🗑️ Supprimer</button>
+                            <button type="submit" class="btn btn-danger btn-small">🗑️ Supprimer</button>
                         </form>
                     </div>
                 </td>
@@ -47,7 +47,7 @@
     </table>
 </div>
 
-<div class="info-box" style="margin-top: 20px;">
+<div class="info-box info-box-top">
     <strong>Total: {{ cartes|length }} carte(s) grise(s)</strong>
 </div>
 {% else %}
