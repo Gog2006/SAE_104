@@ -70,8 +70,7 @@ pip install -r requirements.txt
 # 3. Créer la base de données
 mysql -u root -p < database_setup.sql
 
-# 4. Configurer l'environnement
-cp .env.example .env
+
 # Éditer .env avec vos informations de connexion MySQL
 
 # 5. Lancer l'application
