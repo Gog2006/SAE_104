@@ -64,6 +64,7 @@ git clone https://github.com/Gog2006/SAE_104.git
 cd SAE_104
 
 # 2. Installer les dépendances Python
+sudo apt install python3-pip
 pip install -r requirements.txt
 
 # 3. Créer la base de données
