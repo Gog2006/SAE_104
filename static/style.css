@@ -2,7 +2,7 @@
     --primary-color: #6aa6d3;
     --primary-hover: #ffffff;
     --secondary-color: #0c226b;
-    --success-color: #bc39e4;
+    --success-color: #969696;
     --danger-color: #7a0c00;
     --danger-hover: #c0392b;
     --grey-color: #000000;
@@ -88,7 +88,7 @@ h4 {
 }
 
 .btn-success:hover {
-    background: #20854a;
+    background: #b9154c;
 }
 
 .btn-danger {
