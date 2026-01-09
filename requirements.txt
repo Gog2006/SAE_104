@@ -1,4 +1,5 @@
 Flask==3.0.0
-mysql-connector-python==9.1.0
+# Pin a published mysql-connector-python version
+mysql-connector-python==9.0.0
 python-dotenv==1.0.0
 Flask-WTF==1.2.1
