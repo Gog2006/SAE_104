@@ -38,7 +38,6 @@
             <label for="modele_id">Marque et Modèle *</label>
             <select id="modele_id" name="modele_id" required>
                 <option value="">-- Sélectionnez un modèle --</option>
-                <option value="9">Peugeot - 208 (Automobile - B)</option>
                 {% for modele in modeles %}
                 <option value="{{ modele.id }}">{{ modele.marque_nom }} - {{ modele.modele }} ({{ modele.type_vehicule }})</option>
                 {% endfor %}
