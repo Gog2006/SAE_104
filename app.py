@@ -30,7 +30,8 @@ def before_request():
 @app.teardown_appcontext
 def teardown_db(exception=None):
     """Close database connection after each request"""
-    pass  # Keep connection open for performance
+    if db.connection and db.connection.is_connected():
+        db.connection.close()
 
 @app.route('/')
 def index():
@@ -149,14 +150,29 @@ def add_carte_grise():
             if last_plaque and last_plaque.get('numero_immatriculation'):
                 numero_plaque = generer_prochain_numero_plaque(last_plaque['numero_immatriculation'])
             else:
-                numero_plaque = "AA10AA"
+                numero_plaque = "AA100AA"
             
             # Ensure plate is unique - if duplicate, try next one
-            while db.fetch_one("SELECT id FROM cartes_grises WHERE numero_immatriculation=%s", (numero_plaque,)):
+            max_attempts = 10  # In practice, should find one quickly
+            attempts = 0
+            
+            while numero_plaque:
+                # Check if this plate already exists
+                existing = db.fetch_one("SELECT id FROM cartes_grises WHERE numero_immatriculation=%s", (numero_plaque,))
+                if not existing:  # Plate is unique
+                    break
+                
+                # Try next plate
                 numero_plaque = generer_prochain_numero_plaque(numero_plaque)
-                if numero_plaque is None:
+                attempts += 1
+                
+                if attempts >= max_attempts or numero_plaque is None:
                     flash('Erreur: Impossible de générer un numéro de plaque unique!', 'error')
                     return redirect(url_for('add_carte_grise'))
+            
+            if not numero_plaque:
+                flash('Erreur: Impossible de générer un numéro de plaque valide!', 'error')
+                return redirect(url_for('add_carte_grise'))
             
             # Generate serial number
             modele_info = db.fetch_one("""

@@ -80,48 +80,64 @@ def generer_prochain_numero_plaque(numero_actuel):
         numero_actuel = numero_actuel.replace(' ', '').replace('-', '')
     
     if not numero_actuel or len(numero_actuel) != 7:
-        # Default starting number
-        return "AA10AA"
+        # Default starting number: AA100AA
+        return "AA100AA"
     
     lettres_gauche = numero_actuel[:2]
     chiffres = numero_actuel[2:5]
     lettres_droite = numero_actuel[5:7]
     
-    # Convert to lists for easier manipulation
-    lettres_d_list = list(lettres_droite)
+    # Convert to working numbers
+    num_chiffres = int(chiffres)
+    lg_1 = ord(lettres_gauche[0]) - ord('A')
+    lg_2 = ord(lettres_gauche[1]) - ord('A')
+    ld_1 = ord(lettres_droite[0]) - ord('A')
+    ld_2 = ord(lettres_droite[1]) - ord('A')
     
-    # Increment right letters
-    if lettres_d_list[1] == 'Z':
-        lettres_d_list[1] = 'A'
-        if lettres_d_list[0] == 'Z':
-            # Need to increment middle digits
-            lettres_d_list[0] = 'A'
-            num = int(chiffres) + 1
-            
-            if num <= 999:
-                chiffres = f"{num:03d}"
+    # Start incrementing from the rightmost position
+    # Right-most letter (ld_2)
+    ld_2 += 1
+    if ld_2 <= 25:
+        # No carry needed
+        pass
+    else:
+        # Carry to next position (ld_1)
+        ld_2 = 0
+        ld_1 += 1
+        if ld_1 <= 25:
+            # No carry needed
+            pass
+        else:
+            # Carry to middle digits
+            ld_1 = 0
+            num_chiffres += 1
+            if num_chiffres <= 999:
+                # No carry needed
+                pass
             else:
-                # Need to increment left letters
-                chiffres = "010"  # Reset to minimum (10)
-                lettres_g_list = list(lettres_gauche)
-                
-                if lettres_g_list[1] == 'Z':
-                    lettres_g_list[1] = 'A'
-                    if lettres_g_list[0] == 'Z':
+                # Carry to left letters
+                num_chiffres = 10  # Reset to minimum valid
+                lg_2 += 1
+                if lg_2 <= 25:
+                    # No carry needed
+                    pass
+                else:
+                    # Carry to leftmost letter
+                    lg_2 = 0
+                    lg_1 += 1
+                    if lg_1 > 25:
                         # Maximum reached
                         return None
-                    else:
-                        lettres_g_list[0] = chr(ord(lettres_g_list[0]) + 1)
-                else:
-                    lettres_g_list[1] = chr(ord(lettres_g_list[1]) + 1)
-                
-                lettres_gauche = ''.join(lettres_g_list)
-        else:
-            lettres_d_list[0] = chr(ord(lettres_d_list[0]) + 1)
-    else:
-        lettres_d_list[1] = chr(ord(lettres_d_list[1]) + 1)
     
-    lettres_droite = ''.join(lettres_d_list)
+    # Reconstruct the plate
+    lettres_gauche = chr(ord('A') + lg_1) + chr(ord('A') + lg_2)
+    lettres_droite = chr(ord('A') + ld_1) + chr(ord('A') + ld_2)
+    chiffres = f"{num_chiffres:03d}"
+    
+    # Validate the result
+    if num_chiffres < 10 or num_chiffres > 999:
+        return None
+    
     return f"{lettres_gauche}{chiffres}{lettres_droite}"
 
 
