@@ -74,7 +74,7 @@ mysql -u root -p < database_setup.sql
 # Éditer .env avec vos informations de connexion MySQL
 
 # 5. Lancer l'application
-python3 ./app.py
+python3 app.py
 ```
 
 L'application sera accessible sur `http://localhost:5000`
