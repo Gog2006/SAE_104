@@ -1,12 +1,12 @@
 :root {
-    --primary-color: #2c3e50;
-    --primary-hover: #34495e;
-    --secondary-color: #3498db;
-    --success-color: #27ae60;
-    --danger-color: #e74c3c;
+    --primary-color: #6aa6d3;
+    --primary-hover: #ffffff;
+    --secondary-color: #0c226b;
+    --success-color: #bc39e4;
+    --danger-color: #7a0c00;
     --danger-hover: #c0392b;
-    --grey-color: #95a5a6;
-    --grey-hover: #7f8c8d;
+    --grey-color: #000000;
+    --grey-hover: #000000;
 }
 
 * {
@@ -25,7 +25,7 @@ body {
 .container {
     max-width: 1400px;
     margin: 0 auto;
-    background: white;
+    background: rgb(247, 247, 247);
     border-radius: 10px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     padding: 30px;
@@ -35,23 +35,23 @@ header {
     text-align: center;
     margin-bottom: 30px;
     padding-bottom: 20px;
-    border-bottom: 3px solid var(--primary-color);
+    border-bottom: 3px solid var(--grey-color);
 }
 
 h1 {
-    color: #333;
+    color: #000000;
     font-size: 2.5em;
     margin-bottom: 10px;
 }
 
 h2 {
-    color: var(--primary-color);
+    color: var(--grey-color);
     margin-bottom: 20px;
 }
 
 h3 {
     margin-top: 20px;
-    color: var(--primary-color);
+    color: var(--grey-color);
 }
 
 h4 {
@@ -69,7 +69,7 @@ h4 {
 .btn {
     padding: 12px 24px;
     background: var(--primary-color);
-    color: white;
+    color: rgb(255, 255, 255);
     text-decoration: none;
     border-radius: 5px;
     border: none;
@@ -88,7 +88,7 @@ h4 {
 }
 
 .btn-success:hover {
-    background: #229954;
+    background: #20854a;
 }
 
 .btn-danger {
@@ -164,7 +164,7 @@ tr:hover {
 label {
     display: block;
     margin-bottom: 5px;
-    color: #333;
+    color: #000000;
     font-weight: bold;
 }
 
@@ -197,7 +197,7 @@ input:focus, select:focus {
 .no-data {
     text-align: center;
     padding: 40px;
-    color: #999;
+    color: #979797;
     font-size: 18px;
 }
 

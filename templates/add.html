@@ -8,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='/style.css') }}">
+    <link rel="stylesheet" href="../static/style.css">
     <title>Document</title>
 </head>
 <body>
@@ -21,7 +21,7 @@
 <form method="POST" action="{{ url_for('add_carte_grise') }}">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     
-    <h3 style="margin-top: 20px; color: var(--primary-color);">Informations du Propriétaire</h3>
+    <h3 style="margin-top: 20px; color: var(--grey-color);">Informations du Propriétaire</h3>
     
     <div class="form-row">
         <div class="form-group">
@@ -40,7 +40,7 @@
         <input type="text" id="adresse" name="adresse" required placeholder="15 Rue de la Paix, 75001 Paris">
     </div>
     
-    <h3 style="margin-top: 20px; color: var(--primary-color);">Informations du Véhicule</h3>
+    <h3 style="margin-top: 20px; color: var(--grey-color);">Informations du Véhicule</h3>
     
     <div class="form-row">
         <div class="form-group">
@@ -93,9 +93,9 @@
                    value="{{ prefilled.places_assises if prefilled else request.form.places_assises or '' }}">
         </div>
     </div>
-    
-    <h3 style="margin-top: 20px; color: var(--primary-color);">Caractéristiques Techniques (Optionnel)</h3>
-    
+
+    <h3 style="margin-top: 20px; color: var(--grey-color);">Caractéristiques Techniques (Optionnel)</h3>
+
     <div class="form-row">
         <div class="form-group">
             <label for="cylindree">Cylindrée (cm³)</label>
