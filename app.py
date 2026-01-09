@@ -55,9 +55,9 @@ def add_carte_grise():
     if request.method == 'POST':
         try:
             # Get form data
-            nom = escape(request.form.get('nom', '').strip())
-            prenom = escape(request.form.get('prenom', '').strip())
-            adresse = escape(request.form.get('adresse', '').strip())
+            nom = str(escape(request.form.get('nom', '').strip()))
+            prenom = str(escape(request.form.get('prenom', '').strip()))
+            adresse = str(escape(request.form.get('adresse', '').strip()))
             modele_id = request.form.get('modele_id')
             date_premiere_immat = request.form.get('date_premiere_immat')
             poids_vide = request.form.get('poids_vide')
@@ -96,6 +96,13 @@ def add_carte_grise():
                 numero_plaque = generer_prochain_numero_plaque(last_plaque['numero_immatriculation'])
             else:
                 numero_plaque = "AA10AA"
+            
+            # Ensure plate is unique - if duplicate, try next one
+            while db.fetch_one("SELECT id FROM cartes_grises WHERE numero_immatriculation=%s", (numero_plaque,)):
+                numero_plaque = generer_prochain_numero_plaque(numero_plaque)
+                if numero_plaque is None:
+                    flash('Erreur: Impossible de générer un numéro de plaque unique!', 'error')
+                    return redirect(url_for('add_carte_grise'))
             
             # Generate serial number
             modele_info = db.fetch_one("""
@@ -176,7 +183,7 @@ def edit_carte_grise(carte_id):
             cylindree = request.form.get('cylindree')
             puissance_chevaux = request.form.get('puissance_chevaux')
             emission_co2 = request.form.get('emission_co2')
-            classe_env = escape(request.form.get('classe_environnementale', '').strip())
+            classe_env = str(escape(request.form.get('classe_environnementale', '').strip()))
             
             # Update carte grise
             update_query = """
