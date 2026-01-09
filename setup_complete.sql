@@ -167,6 +167,34 @@ INSERT INTO modeles (modele, marque_id, categorie_id, type_vehicule) VALUES
 ('Transit 350', 6, 3, 'Camion léger - C'),
 ('Transit 470', 6, 3, 'Camion léger - C');
 
+INSERT INTO cartes_grises (numero_carte_grise, numero_immatriculation, date_premiere_immat, date_immat_actuelle, proprietaire_id, est_conducteur, modele_id, numero_serie, poids_vide_kg, poids_max_kg, categorie_permis, cylindree_cm3, puissance_chevaux, places_assises, emission_co2_g_km) VALUES
+-- Honda Civic (Automobile - B) - ID Modele: 3
+('2026AA00001', 'AB 100 CD', '2020-05-12', '2020-05-12', 1, TRUE, 3, 'HON2020M05000001', 1300, 1800, 'B', 1498, 182, 5, 128),
+-- Honda CB500F (Deux roues - A2) - ID Modele: 1
+('2026AA00002', 'AB 101 CD', '2021-06-15', '2021-06-15', 2, TRUE, 1, 'HON2021M06000001', 190, 370, 'A2', 471, 48, 2, 80),
+-- Peugeot 208 (Automobile - B) - ID Modele: 9
+('2026AA00003', 'PE 200 UG', '2022-03-20', '2022-03-20', 3, TRUE, 9, 'PEU2022M03000001', 1050, 1550, 'B', 1199, 100, 5, 102),
+-- Peugeot Boxer 440 (Camion léger - C) - ID Modele: 11
+('2026AA00004', 'PE 201 UG', '2021-11-05', '2021-11-05', 4, TRUE, 11, 'PEU2021M11000001', 2100, 4400, 'C', 2179, 140, 3, 230),
+-- Renault Clio (Automobile - B) - ID Modele: 15
+('2026AB00005', 'RE 300 NA', '2023-01-10', '2023-01-10', 5, TRUE, 15, 'REN2023M01000001', 1100, 1600, 'B', 999, 90, 5, 110),
+-- Renault Master (Camion léger - C) - ID Modele: 17
+('2026AB00006', 'RE 301 NA', '2020-08-22', '2020-08-22', 6, TRUE, 17, 'REN2020M08000001', 2200, 3500, 'C', 2299, 135, 3, 240),
+-- Mercedes Classe A (Automobile - B) - ID Modele: 21
+('2026AC00007', 'ME 400 RZ', '2024-04-15', '2024-04-15', 1, TRUE, 21, 'MER2024M04000001', 1400, 1950, 'B', 1332, 140, 5, 130),
+-- Mercedes Sprinter 5t (Camion léger - C) - ID Modele: 23
+('2026AC00008', 'ME 401 RZ', '2021-02-28', '2021-02-28', 2, TRUE, 23, 'MER2021M02000001', 2600, 5000, 'C', 2143, 163, 3, 215),
+-- Iveco Daily 35C (Camion léger - C) - ID Modele: 29
+('2026AD00009', 'IV 500 CO', '2022-10-12', '2022-10-12', 3, TRUE, 29, 'IVE2022M10000001', 2200, 3500, 'C', 2998, 160, 3, 225),
+-- Iveco Turbo Bike (Deux roues - A) - ID Modele: 26
+('2026AD00010', 'IV 501 CO', '2023-05-30', '2023-05-30', 4, TRUE, 26, 'IVE2023M05000001', 250, 450, 'A', 998, 120, 2, 110),
+-- Ford Fiesta (Automobile - B) - ID Modele: 33
+('2026AE00011', 'FO 600 RD', '2020-12-01', '2020-12-01', 5, TRUE, 33, 'FOR2020M12000001', 1150, 1650, 'B', 999, 95, 5, 115),
+-- Ford Transit 470 (Camion léger - C) - ID Modele: 36
+('2026AE00012', 'FO 601 RD', '2021-07-18', '2021-07-18', 6, TRUE, 36, 'FOR2021M07000001', 2800, 4700, 'C', 1995, 170, 3, 245);
+
+
+
 -- =========================
 -- Create indexes for performance
 -- =========================
