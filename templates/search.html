@@ -3,7 +3,15 @@
 {% block title %}Rechercher Cartes Grises{% endblock %}
 
 {% block content %}
-<h2>🔍 Rechercher et Filtrer</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+<h2>Rechercher et Filtrer</h2>
 
 <form method="POST" action="{{ url_for('search') }}">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
@@ -93,4 +101,6 @@
         <li><strong>Statistiques:</strong> Sélectionner "Statistiques par marque" pour voir le classement des marques</li>
     </ul>
 </div>
+</head>
+<body>
 {% endblock %}
