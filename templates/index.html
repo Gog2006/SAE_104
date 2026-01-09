@@ -3,6 +3,15 @@
 {% block title %}Liste des Cartes Grises{% endblock %}
 
 {% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+
 <h2>📋 Liste des Cartes Grises</h2>
 
 {% if cartes %}
@@ -55,5 +64,7 @@
     <p>Aucune carte grise dans la base de données.</p>
     <p>Cliquez sur "Nouvelle carte" pour ajouter la première carte grise!</p>
 </div>
+</head>
+<body>
 {% endif %}
 {% endblock %}
