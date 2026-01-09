@@ -51,8 +51,62 @@ def index():
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_carte_grise():
-    """Add new vehicle registration card"""
+    """Add new vehicle registration card with Auto-fill feature"""
+
+    # Format: ID_MODELE: {'poids_vide': val, 'poids_max': val, 'permis': val, 'places': val, 'cyl': val, 'cv': val, 'co2': val}
+    DONNEES_TECHNIQUES_REF = {
+        # Honda
+        1: {'pv': 190, 'pm': 370, 'permis': 'A2', 'pl': 2, 'cyl': 471, 'cv': 48, 'co2': 80},   # CB500F
+        2: {'pv': 201, 'pm': 390, 'permis': 'A', 'pl': 2, 'cyl': 999, 'cv': 217, 'co2': 160},  # CBR1000RR
+        3: {'pv': 1300, 'pm': 1800, 'permis': 'B', 'pl': 5, 'cyl': 1498, 'cv': 182, 'co2': 128}, # Civic
+        4: {'pv': 1600, 'pm': 2200, 'permis': 'B', 'pl': 5, 'cyl': 1993, 'cv': 184, 'co2': 153}, # CR-V
+        5: {'pv': 2800, 'pm': 4500, 'permis': 'C', 'pl': 3, 'cyl': 2999, 'cv': 150, 'co2': 210}, # NT400
+        6: {'pv': 2600, 'pm': 3500, 'permis': 'C', 'pl': 3, 'cyl': 2488, 'cv': 130, 'co2': 220}, # Cabstar
+        # Peugeot
+        7: {'pv': 95, 'pm': 270, 'permis': 'A1', 'pl': 2, 'cyl': 49, 'cv': 4, 'co2': 45},     # Kisbee
+        8: {'pv': 280, 'pm': 450, 'permis': 'A', 'pl': 2, 'cyl': 399, 'cv': 36, 'co2': 89},    # Metropolis
+        9: {'pv': 1050, 'pm': 1550, 'permis': 'B', 'pl': 5, 'cyl': 1199, 'cv': 100, 'co2': 102}, # 208
+        10: {'pv': 1500, 'pm': 2100, 'permis': 'B', 'pl': 7, 'cyl': 1598, 'cv': 180, 'co2': 140},# 5008
+        11: {'pv': 2100, 'pm': 4400, 'permis': 'C', 'pl': 3, 'cyl': 2179, 'cv': 140, 'co2': 230},# Boxer
+        12: {'pv': 1800, 'pm': 3100, 'permis': 'C', 'pl': 3, 'cyl': 1997, 'cv': 145, 'co2': 190},# Expert
+        # ... (Le reste des IDs suivrait la même logique)
+    }
+
+    # Récupérer les modèles pour le menu déroulant (Nécessaire pour GET et POST)
+    modeles = db.fetch_all("""
+        SELECT m.id, m.modele, m.type_vehicule, ma.nom as marque_nom, c.nom as categorie_nom
+        FROM modeles m
+        JOIN marques ma ON m.marque_id = ma.id
+        JOIN categories_vehicule c ON m.categorie_id = c.id
+        ORDER BY ma.nom, m.modele
+    """)
+
+
     if request.method == 'POST':
+        # --- CAS 1 : C'est une demande d'auto-remplissage ---
+        if 'btn_charger' in request.form:
+            modele_id = request.form.get('modele_id')
+            prefilled_data = {}
+            
+            # On récupère les données déjà saisies pour ne pas les perdre
+            form_data = request.form
+            
+            if modele_id and int(modele_id) in DONNEES_TECHNIQUES_REF:
+                ref = DONNEES_TECHNIQUES_REF[int(modele_id)]
+                prefilled_data = {
+                    'poids_vide': ref['pv'],
+                    'poids_max': ref['pm'],
+                    'categorie_permis': ref['permis'],
+                    'places_assises': ref['pl'],
+                    'cylindree': ref['cyl'],
+                    'puissance_chevaux': ref['cv'],
+                    'emission_co2': ref['co2']
+                }
+                flash('Caractéristiques techniques chargées.', 'info')
+            
+            # On réaffiche le formulaire avec les données pré-remplies
+            return render_template('add.html', modeles=modeles, form_data=form_data, prefilled=prefilled_data)
+            
         try:
             # Get form data
             nom = escape(request.form.get('nom', '').strip())

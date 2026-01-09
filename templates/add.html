@@ -38,6 +38,7 @@
             <label for="modele_id">Marque et Modèle *</label>
             <select id="modele_id" name="modele_id" required>
                 <option value="">-- Sélectionnez un modèle --</option>
+                <option value="9">Peugeot - 208 (Automobile - B)</option>
                 {% for modele in modeles %}
                 <option value="{{ modele.id }}">{{ modele.marque_nom }} - {{ modele.modele }} ({{ modele.type_vehicule }})</option>
                 {% endfor %}
@@ -53,12 +54,14 @@
     <div class="form-row">
         <div class="form-group">
             <label for="poids_vide">Poids à vide (kg) *</label>
-            <input type="number" id="poids_vide" name="poids_vide" required min="100" placeholder="1200">
+            <input type="number" id="poids_vide" name="poids_vide" required min="100" placeholder="1200"
+                   value="{{ prefilled.poids_vide if prefilled else request.form.poids_vide or '' }}">
         </div>
         
         <div class="form-group">
             <label for="poids_max">Poids maximal (kg) *</label>
-            <input type="number" id="poids_max" name="poids_max" required min="100" placeholder="1800">
+            <input type="number" id="poids_max" name="poids_max" required min="100" placeholder="1800"
+                   value="{{ prefilled.poids_max if prefilled else request.form.poids_max or '' }}">
         </div>
     </div>
     
@@ -67,17 +70,19 @@
             <label for="categorie_permis">Catégorie de Permis *</label>
             <select id="categorie_permis" name="categorie_permis" required>
                 <option value="">-- Sélectionnez --</option>
-                <option value="A1">A1 - Moto légère</option>
-                <option value="A2">A2 - Moto moyenne</option>
-                <option value="A">A - Moto</option>
-                <option value="B">B - Automobile</option>
-                <option value="C">C - Camion léger</option>
+                {% set selected_permis = prefilled.categorie_permis if prefilled else request.form.categorie_permis %}
+                <option value="A1" {% if selected_permis == 'A1' %}selected{% endif %}>A1 - Moto légère</option>
+                <option value="A2" {% if selected_permis == 'A2' %}selected{% endif %}>A2 - Moto moyenne</option>
+                <option value="A"  {% if selected_permis == 'A' %}selected{% endif %}>A - Moto</option>
+                <option value="B"  {% if selected_permis == 'B' %}selected{% endif %}>B - Automobile</option>
+                <option value="C"  {% if selected_permis == 'C' %}selected{% endif %}>C - Camion léger</option>
             </select>
         </div>
         
         <div class="form-group">
             <label for="places_assises">Nombre de places assises</label>
-            <input type="number" id="places_assises" name="places_assises" min="1" max="50" placeholder="5">
+            <input type="number" id="places_assises" name="places_assises" min="1" max="50" placeholder="5"
+                   value="{{ prefilled.places_assises if prefilled else request.form.places_assises or '' }}">
         </div>
     </div>
     
@@ -86,18 +91,21 @@
     <div class="form-row">
         <div class="form-group">
             <label for="cylindree">Cylindrée (cm³)</label>
-            <input type="number" id="cylindree" name="cylindree" min="0" placeholder="1560">
+            <input type="number" id="cylindree" name="cylindree" min="0" placeholder="1560"
+                   value="{{ prefilled.cylindree if prefilled else request.form.cylindree or '' }}">
         </div>
         
         <div class="form-group">
             <label for="puissance_chevaux">Puissance (chevaux)</label>
-            <input type="number" id="puissance_chevaux" name="puissance_chevaux" min="0" placeholder="130">
+            <input type="number" id="puissance_chevaux" name="puissance_chevaux" min="0" placeholder="130"
+                   value="{{ prefilled.puissance_chevaux if prefilled else request.form.puissance_chevaux or '' }}">
         </div>
     </div>
     
     <div class="form-group">
         <label for="emission_co2">Émission CO2 (g/km)</label>
-        <input type="number" id="emission_co2" name="emission_co2" min="0" placeholder="110">
+        <input type="number" id="emission_co2" name="emission_co2" min="0" placeholder="110"
+               value="{{ prefilled.emission_co2 if prefilled else request.form.emission_co2 or '' }}">
     </div>
     
     <div class="actions" style="margin-top: 30px;">
