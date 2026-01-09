@@ -85,14 +85,14 @@ def add_carte_grise():
             
             # Generate next registration card number
             last_carte = db.fetch_one("SELECT numero_carte_grise FROM cartes_grises ORDER BY id DESC LIMIT 1")
-            if last_carte:
+            if last_carte and last_carte.get('numero_carte_grise'):
                 numero_carte = generer_prochain_numero_carte_grise(last_carte['numero_carte_grise'])
             else:
                 numero_carte = generer_prochain_numero_carte_grise(None)
             
             # Generate next license plate number
             last_plaque = db.fetch_one("SELECT numero_immatriculation FROM cartes_grises ORDER BY id DESC LIMIT 1")
-            if last_plaque:
+            if last_plaque and last_plaque.get('numero_immatriculation'):
                 numero_plaque = generer_prochain_numero_plaque(last_plaque['numero_immatriculation'])
             else:
                 numero_plaque = "AA10AA"
@@ -105,6 +105,10 @@ def add_carte_grise():
                 WHERE m.id = %s
             """, (modele_id,))
             
+            if not modele_info:
+                flash('Modèle de véhicule introuvable!', 'error')
+                return redirect(url_for('add_carte_grise'))
+            
             date_obj = datetime.strptime(date_premiere_immat, '%Y-%m-%d')
             # Get count of vehicles for this month
             count_query = """
@@ -113,7 +117,7 @@ def add_carte_grise():
             """
             pattern = f"{modele_info['numero_fabricant']}{date_obj.year}M{date_obj.month:02d}%"
             count_result = db.fetch_one(count_query, (pattern,))
-            numero_vehicule = (count_result['count'] + 1) if count_result else 1
+            numero_vehicule = (count_result['count'] + 1) if count_result and count_result.get('count') is not None else 1
             
             numero_serie = generer_numero_serie(
                 modele_info['numero_fabricant'],
