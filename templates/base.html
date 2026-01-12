@@ -9,14 +9,14 @@
 <body>
     <div class="container">
         <header>
-            <h1>🚗 Système de Gestion des Cartes Grises</h1>
+            <h1>Système de Gestion des Cartes Grises</h1>
             <p>SAE 1.04 - Base de données des cartes grises</p>
         </header>
         
         <nav class="nav">
-            <a href="{{ url_for('index') }}" class="btn">🏠 Toutes les cartes</a>
-            <a href="{{ url_for('add_carte_grise') }}" class="btn btn-success">➕ Nouvelle carte</a>
-            <a href="{{ url_for('search') }}" class="btn btn-secondary">🔍 Rechercher</a>
+            <a href="{{ url_for('index') }}" class="btn">Toutes les cartes</a>
+            <a href="{{ url_for('add_carte_grise') }}" class="btn btn-success">Nouvelle carte</a>
+            <a href="{{ url_for('search') }}" class="btn btn-secondary">Rechercher</a>
         </nav>
         
         {% with messages = get_flashed_messages(with_categories=true) %}

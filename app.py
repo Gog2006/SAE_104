@@ -1,7 +1,12 @@
+# Importation des modules Flask pour les routes, templates et gestion des requêtes
 from flask import Flask, render_template, request, redirect, url_for, flash
+# Protection CSRF (Cross-Site Request Forgery)
 from flask_wtf.csrf import CSRFProtect
+# Fonction pour échapper les caractères HTML (sécurité)
 from markupsafe import escape
+# Module de gestion de la base de données
 from database import Database
+# Fonctions de génération de numéros pour cartes grises et plaques
 from numero_generator import (
     generer_prochain_numero_carte_grise,
     generer_prochain_numero_plaque,
@@ -11,31 +16,36 @@ from numero_generator import (
 import os
 from datetime import datetime
 
+# Initialisation de l'application Flask
 app = Flask(__name__)
+# Configuration de la clé secrète pour les sessions (CSRF, etc.)
 app.secret_key = os.getenv('SECRET_KEY', os.urandom(24).hex())
 
-# Enable CSRF protection
+# Activation de la protection CSRF (protection contre les attaques cross-site)
 csrf = CSRFProtect(app)
 
-# Initialize database
+# Initialisation de la connexion à la base de données
 db = Database()
 
+# Hook exécuté avant chaque requête HTTP
 @app.before_request
 def before_request():
-    """Connect to database before each request"""
+    """Connexion à la base de données avant chaque requête"""
     if not db.connection or not db.connection.is_connected():
         if not db.connect():
             flash('Erreur de connexion à la base de données. Veuillez vérifier votre configuration.', 'error')
 
+# Hook exécuté après chaque requête HTTP
 @app.teardown_appcontext
 def teardown_db(exception=None):
-    """Close database connection after each request"""
+    """Ferme la connexion à la base de données après chaque requête"""
     if db.connection and db.connection.is_connected():
         db.connection.close()
 
 @app.route('/')
 def index():
-    """Home page - display all vehicle registration cards"""
+    """Page d'accueil - Affiche toutes les cartes grises"""
+    # Requête pour récupérer les cartes grises avec les informations du propriétaire et du modèle
     query = """
         SELECT cg.*, 
                p.nom, p.prenom, p.adresse,
@@ -52,9 +62,10 @@ def index():
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_carte_grise():
-    """Add new vehicle registration card with Auto-fill feature"""
+    """Ajoute une nouvelle carte grise avec fonction d'auto-remplissage des caractéristiques"""
 
-    # Format: ID_MODELE: {'poids_vide': val, 'poids_max': val, 'permis': val, 'places': val, 'cyl': val, 'cv': val, 'co2': val}
+    # Données techniques de référence pour chaque modèle
+    # Format: ID_MODELE: {'pv': poids_vide, 'pm': poids_max, 'permis': catégorie, 'pl': places, 'cyl': cylindrée, 'cv': chevaux, 'co2': émission}
     DONNEES_TECHNIQUES_REF = {
         # Honda
         1: {'pv': 190, 'pm': 370, 'permis': 'A2', 'pl': 2, 'cyl': 471, 'cv': 48, 'co2': 80},   # CB500F
@@ -73,7 +84,7 @@ def add_carte_grise():
         # ... (Le reste des IDs suivrait la même logique)
     }
 
-    # Récupérer les modèles pour le menu déroulant (Nécessaire pour GET et POST)
+    # Récupération des modèles de véhicules pour le menu déroulant (Nécessaire pour GET et POST)
     modeles = db.fetch_all("""
         SELECT m.id, m.modele, m.type_vehicule, ma.nom as marque_nom, c.nom as categorie_nom
         FROM modeles m
@@ -84,12 +95,12 @@ def add_carte_grise():
 
 
     if request.method == 'POST':
-        # --- CAS 1 : C'est une demande d'auto-remplissage ---
+        # --- CAS 1 : C'est une demande d'auto-remplissage des données techniques ---
         if 'btn_charger' in request.form:
             modele_id = request.form.get('modele_id')
             prefilled_data = {}
             
-            # On récupère les données déjà saisies pour ne pas les perdre
+            # Récupération des données déjà saisies pour ne pas les perdre
             form_data = request.form
             
             if modele_id and int(modele_id) in DONNEES_TECHNIQUES_REF:
@@ -105,11 +116,11 @@ def add_carte_grise():
                 }
                 flash('Caractéristiques techniques chargées.', 'info')
             
-            # On réaffiche le formulaire avec les données pré-remplies
+            # Réaffichage du formulaire avec les données pré-remplies
             return render_template('add.html', modeles=modeles, form_data=form_data, prefilled=prefilled_data)
             
         try:
-            # Get form data
+            # Récupération des données du formulaire
             nom = str(escape(request.form.get('nom', '').strip()))
             prenom = str(escape(request.form.get('prenom', '').strip()))
             adresse = str(escape(request.form.get('adresse', '').strip()))
@@ -123,12 +134,12 @@ def add_carte_grise():
             places_assises = request.form.get('places_assises')
             emission_co2 = request.form.get('emission_co2')
             
-            # Validate required fields
+            # Validation des champs obligatoires
             if not all([nom, prenom, adresse, modele_id, date_premiere_immat]):
                 flash('Les champs nom, prénom, adresse, modèle et date sont obligatoires!', 'error')
                 return redirect(url_for('add_carte_grise'))
             
-            # Get or create proprietaire
+            # Vérification ou création du propriétaire
             query_prop = "SELECT id FROM proprietaires WHERE nom=%s AND prenom=%s AND adresse=%s"
             proprietaire = db.fetch_one(query_prop, (nom, prenom, adresse))
             
@@ -138,31 +149,31 @@ def add_carte_grise():
             else:
                 proprietaire_id = proprietaire['id']
             
-            # Generate next registration card number
+            # Génération du prochain numéro de carte grise
             last_carte = db.fetch_one("SELECT numero_carte_grise FROM cartes_grises ORDER BY id DESC LIMIT 1")
             if last_carte and last_carte.get('numero_carte_grise'):
                 numero_carte = generer_prochain_numero_carte_grise(last_carte['numero_carte_grise'])
             else:
                 numero_carte = generer_prochain_numero_carte_grise(None)
             
-            # Generate next license plate number
+            # Génération du prochain numéro de plaque d'immatriculation
             last_plaque = db.fetch_one("SELECT numero_immatriculation FROM cartes_grises ORDER BY id DESC LIMIT 1")
             if last_plaque and last_plaque.get('numero_immatriculation'):
                 numero_plaque = generer_prochain_numero_plaque(last_plaque['numero_immatriculation'])
             else:
                 numero_plaque = "AA100AA"
             
-            # Ensure plate is unique - if duplicate, try next one
-            max_attempts = 10  # In practice, should find one quickly
+            # Vérification de l'unicité de la plaque - génération d'une nouvelle si doublon
+            max_attempts = 10  # Trouve généralement une plaque unique rapidement
             attempts = 0
             
             while numero_plaque:
-                # Check if this plate already exists
+                # Vérification si cette plaque existe déjà
                 existing = db.fetch_one("SELECT id FROM cartes_grises WHERE numero_immatriculation=%s", (numero_plaque,))
-                if not existing:  # Plate is unique
+                if not existing:  # Plaque unique trouvée
                     break
                 
-                # Try next plate
+                # Essai du prochain numéro de plaque
                 numero_plaque = generer_prochain_numero_plaque(numero_plaque)
                 attempts += 1
                 
@@ -174,7 +185,7 @@ def add_carte_grise():
                 flash('Erreur: Impossible de générer un numéro de plaque valide!', 'error')
                 return redirect(url_for('add_carte_grise'))
             
-            # Generate serial number
+            # Génération du numéro de série du véhicule
             modele_info = db.fetch_one("""
                 SELECT m.*, ma.numero_fabricant 
                 FROM modeles m 
@@ -187,7 +198,7 @@ def add_carte_grise():
                 return redirect(url_for('add_carte_grise'))
             
             date_obj = datetime.strptime(date_premiere_immat, '%Y-%m-%d')
-            # Get count of vehicles for this month
+            # Récupération du nombre de véhicules immatriculés pour ce mois
             count_query = """
                 SELECT COUNT(*) as count FROM cartes_grises 
                 WHERE numero_serie LIKE %s
@@ -203,7 +214,7 @@ def add_carte_grise():
                 numero_vehicule
             )
             
-            # Insert carte grise
+            # Insertion de la nouvelle carte grise en base de données
             insert_carte = """
                 INSERT INTO cartes_grises (
                     numero_carte_grise, numero_immatriculation, date_premiere_immat,
@@ -231,7 +242,7 @@ def add_carte_grise():
         except Exception as e:
             flash(f'Erreur: {str(e)}', 'error')
     
-    # Get modeles for dropdown
+    # Récupération des modèles pour le menu déroulant
     modeles = db.fetch_all("""
         SELECT m.id, m.modele, m.type_vehicule, ma.nom as marque_nom, c.nom as categorie_nom
         FROM modeles m
@@ -244,10 +255,10 @@ def add_carte_grise():
 
 @app.route('/edit/<int:carte_id>', methods=['GET', 'POST'])
 def edit_carte_grise(carte_id):
-    """Edit existing vehicle registration card"""
+    """Modification d'une carte grise existante"""
     if request.method == 'POST':
         try:
-            # Get form data
+            # Récupération des données du formulaire
             poids_vide = request.form.get('poids_vide')
             poids_max = request.form.get('poids_max')
             cylindree = request.form.get('cylindree')
@@ -255,7 +266,7 @@ def edit_carte_grise(carte_id):
             emission_co2 = request.form.get('emission_co2')
             classe_env = str(escape(request.form.get('classe_environnementale', '').strip()))
             
-            # Update carte grise
+            # Mise à jour de la carte grise
             update_query = """
                 UPDATE cartes_grises 
                 SET poids_vide_kg=%s, poids_max_kg=%s, cylindree_cm3=%s,
@@ -280,7 +291,7 @@ def edit_carte_grise(carte_id):
         except Exception as e:
             flash(f'Erreur: {str(e)}', 'error')
     
-    # Get carte grise data
+    # Récupération des données de la carte grise
     carte = db.fetch_one("""
         SELECT cg.*, 
                p.nom, p.prenom, p.adresse,
@@ -301,7 +312,7 @@ def edit_carte_grise(carte_id):
 
 @app.route('/delete/<int:carte_id>', methods=['POST'])
 def delete_carte_grise(carte_id):
-    """Delete vehicle registration card"""
+    """Suppression d'une carte grise"""
     query = "DELETE FROM cartes_grises WHERE id=%s"
     
     if db.execute_query(query, (carte_id,)):
@@ -313,13 +324,14 @@ def delete_carte_grise(carte_id):
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
-    """Search and filter vehicle registration cards"""
+    """Recherche et filtrage des cartes grises"""
     cartes = []
     
     if request.method == 'POST':
         search_type = request.form.get('search_type')
         search_value = request.form.get('search_value', '').strip()
         
+        # Recherche par nom du propriétaire
         if search_type == 'nom':
             query = """
                 SELECT cg.*, p.nom, p.prenom, mo.modele, ma.nom as marque_nom
@@ -332,6 +344,7 @@ def search():
             """
             cartes = db.fetch_all(query, (f'%{search_value}%',))
         
+        # Recherche par numéro de plaque
         elif search_type == 'plaque':
             query = """
                 SELECT cg.*, p.nom, p.prenom, mo.modele, ma.nom as marque_nom
@@ -344,6 +357,7 @@ def search():
             """
             cartes = db.fetch_all(query, (f'%{search_value}%',))
         
+        # Recherche par marque - affiche les statistiques
         elif search_type == 'marque':
             query = """
                 SELECT ma.nom as marque_nom, COUNT(*) as count
@@ -357,8 +371,11 @@ def search():
     
     return render_template('search.html', cartes=cartes)
 
+# Point d'entrée de l'application
 if __name__ == '__main__':
+    # Configuration de mode debug, hôte et port depuis les variables d'environnement
     debug_mode = os.getenv('FLASK_DEBUG', 'False').lower() == 'true'
     host = os.getenv('FLASK_HOST', '127.0.0.1')
     port = int(os.getenv('FLASK_PORT', '5000'))
+    # Lancement du serveur Flask
     app.run(debug=debug_mode, host=host, port=port)

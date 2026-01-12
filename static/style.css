@@ -1,20 +1,23 @@
+/* Variables de couleur personnalisées */
 :root {
-    --primary-color: #6aa6d3;
-    --primary-hover: #ffffff;
-    --secondary-color: #0c226b;
-    --success-color: #969696;
-    --danger-color: #7a0c00;
-    --danger-hover: #c0392b;
-    --grey-color: #000000;
-    --grey-hover: #000000;
+    --primary-color: #6aa6d3;      /* Couleur primaire (bleu clair) */
+    --primary-hover: #ffffff;       /* Couleur primaire au survol */
+    --secondary-color: #0c226b;     /* Couleur secondaire (bleu foncé) */
+    --success-color: #969696;       /* Couleur de succès (gris) */
+    --danger-color: #7a0c00;        /* Couleur de danger (rouge foncé) */
+    --danger-hover: #c0392b;        /* Couleur de danger au survol */
+    --grey-color: #000000;          /* Couleur grise (noir) */
+    --grey-hover: #000000;          /* Couleur grise au survol */
 }
 
+/* Style général de tous les éléments */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Style du corps de la page */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
@@ -22,6 +25,7 @@ body {
     padding: 20px;
 }
 
+/* Conteneur principal */
 .container {
     max-width: 1400px;
     margin: 0 auto;
@@ -31,6 +35,7 @@ body {
     padding: 30px;
 }
 
+/* En-tête de la page */
 header {
     text-align: center;
     margin-bottom: 30px;
@@ -38,26 +43,31 @@ header {
     border-bottom: 3px solid var(--grey-color);
 }
 
+/* Titres de niveau 1 */
 h1 {
     color: #000000;
     font-size: 2.5em;
     margin-bottom: 10px;
 }
 
+/* Titres de niveau 2 */
 h2 {
     color: var(--grey-color);
     margin-bottom: 20px;
 }
 
+/* Titres de niveau 3 */
 h3 {
     margin-top: 20px;
     color: var(--grey-color);
 }
 
+/* Titres de niveau 4 */
 h4 {
     margin-bottom: 10px;
 }
 
+/* Barre de navigation */
 .nav {
     display: flex;
     gap: 15px;
@@ -66,6 +76,7 @@ h4 {
     flex-wrap: wrap;
 }
 
+/* Boutons */
 .btn {
     padding: 12px 24px;
     background: var(--primary-color);
@@ -79,22 +90,27 @@ h4 {
     display: inline-block;
 }
 
+/* Effet au survol des boutons */
 .btn:hover {
     background: var(--primary-hover);
 }
 
+/* Bouton de succès */
 .btn-success {
     background: var(--success-color);
 }
 
+/* Effet au survol des boutons de succès */
 .btn-success:hover {
     background: #b9154c;
 }
 
+/* Bouton de danger */
 .btn-danger {
     background: var(--danger-color);
 }
 
+/* Effet au survol des boutons de danger */
 .btn-danger:hover {
     background: var(--danger-hover);
 }
