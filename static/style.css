@@ -133,17 +133,14 @@ h4 {
     margin-top: 12px;
     margin-left: auto;
     margin-right: 0;
+    padding: 10px 22px;
+    font-size: 14px;
 }
 /*. Application du gris au survol spécifiquement pour "Charger modèle" */
 .btn-load-right:hover {
     background: var(--success-color) !important; 
     color: white;
 }
-.btn-small {
-    padding: 10px 22px;
-    font-size: 14px;
-}
-
 .flash-messages {
     margin-bottom: 20px;
 }
@@ -203,6 +200,7 @@ label {
 input[type="text"],
 input[type="date"],
 input[type="number"],
+
 select {
     width: 100%;
     padding: 10px;
