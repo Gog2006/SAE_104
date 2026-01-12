@@ -1,7 +1,7 @@
 /* Variables de couleur personnalisées */
 :root {
     --primary-color: #6aa6d3;      /* Couleur primaire (bleu clair) */
-    --primary-hover: #ffffff;       /* Couleur primaire au survol */
+    --primary-hover: #000000;       /* Couleur primaire au survol */
     --secondary-color: #0c226b;     /* Couleur secondaire (bleu foncé) */
     --success-color: #969696;       /* Couleur de succès (gris) */
     --danger-color: #7a0c00;        /* Couleur de danger (rouge foncé) */
@@ -125,15 +125,16 @@ h4 {
 .btn-secondary:hover {
     background: var(--grey-hover);
 }
+
 /* Positionnement spécifique du bouton charger modèle */
 .btn-load-right {
     display: block;
-    margin-top: 10px;
+    margin-top: 12px;
     margin-left: auto;
     margin-right: 0;
 }
 .btn-small {
-    padding: 6px 12px;
+    padding: 10px 22px;
     font-size: 14px;
 }
 
