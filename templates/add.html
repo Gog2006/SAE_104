@@ -14,10 +14,12 @@
 <body>
 <h2> Nouvelle Carte Grise</h2>
 
+<div class="info-box">
+    <p><strong>Information:</strong> Les numéros de carte grise et de plaque d'immatriculation seront générés automatiquement.</p>
+</div>
+
 <form method="POST" action="{{ url_for('add_carte_grise') }}" novalidate>
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-    
-   
     
     <h3 style="margin-top: 20px; color: var(--grey-color);">Informations du Véhicule</h3>
     
@@ -96,6 +98,7 @@
         <input type="number" id="emission_co2" name="emission_co2" min="0" placeholder="110"
                value="{{ prefilled.emission_co2 if prefilled else request.form.emission_co2 or '' }}">
     </div>
+ 
  <h3 style="margin-top: 20px; color: var(--grey-color);">Informations du Propriétaire</h3>
     
     <div class="form-row">
@@ -115,13 +118,13 @@
         <input type="text" id="adresse" name="adresse" required placeholder="15 Rue de la Paix, 75001 Paris">
     </div>
 
-
     
     <div class="actions" style="margin-top: 30px;">
         <button type="submit" name="btn_save" class="btn btn-success"> Créer la Carte Grise</button>
         <a href="{{ url_for('index') }}" class="btn btn-secondary"> Annuler</a>
     </div>
 </form>
+
 
 <div class="info-box">
     <p><strong>Information:</strong> Les numéros de carte grise et de plaque d'immatriculation seront générés automatiquement.</p>
