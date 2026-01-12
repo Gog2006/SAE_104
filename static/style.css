@@ -49,17 +49,20 @@ h1 {
     font-size: 2.5em;
     margin-bottom: 10px;
 }
-
-/* Titres de niveau 2 */
 h2 {
     color: var(--grey-color);
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    font-size: 2.2rem; 
 }
 
-/* Titres de niveau 3 */
+/* Titres de niveau 3  */
 h3 {
-    margin-top: 20px;
+    margin-top: 30px;
+    margin-bottom: 15px;
     color: var(--grey-color);
+    font-size: 1.6rem; 
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 5px;
 }
 
 /* Titres de niveau 4 */
@@ -122,7 +125,13 @@ h4 {
 .btn-secondary:hover {
     background: var(--grey-hover);
 }
-
+/* Positionnement spécifique du bouton charger modèle */
+.btn-load-right {
+    display: block;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: 0;
+}
 .btn-small {
     padding: 6px 12px;
     font-size: 14px;
