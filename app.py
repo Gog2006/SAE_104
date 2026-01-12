@@ -91,28 +91,28 @@ def add_carte_grise():
         18: {'pv': 2400, 'pm': 4500, 'permis': 'C', 'pl': 3, 'cyl': 2488, 'cv': 140, 'co2': 250}, # Maxity
 
        # MERCEDES (19-24)
-        19: {'poids_vide': 130, 'poids_max': 310, 'categorie_permis': 'A1', 'places_assises': 2, 'cylindree': 125, 'puissance_chevaux': 12, 'emission_co2': 60},
-        20: {'poids_vide': 210, 'poids_max': 400, 'categorie_permis': 'A', 'places_assises': 2, 'cylindree': 998, 'puissance_chevaux': 200, 'emission_co2': 155},
-        21: {'poids_vide': 1350, 'poids_max': 1900, 'categorie_permis': 'B', 'places_assises': 5, 'cylindree': 1461, 'puissance_chevaux': 116, 'emission_co2': 120},
-        22: {'poids_vide': 1800, 'poids_max': 2400, 'categorie_permis': 'B', 'places_assises': 5, 'cylindree': 1993, 'puissance_chevaux': 190, 'emission_co2': 160},
-        23: {'poids_vide': 2600, 'poids_max': 5000, 'categorie_permis': 'C', 'places_assises': 3, 'cylindree': 2143, 'puissance_chevaux': 163, 'emission_co2': 215},
-        24: {'poids_vide': 2900, 'poids_max': 4800, 'categorie_permis': 'C', 'places_assises': 3, 'cylindree': 4250, 'puissance_chevaux': 170, 'emission_co2': 230},
+        19: {'pv': 130, 'pm': 310, 'permis': 'A1', 'pl': 2, 'cyl': 125, 'cv': 12, 'co2': 60},   # Citan Scooter
+        20: {'pv': 210, 'pm': 400, 'permis': 'A', 'pl': 2, 'cyl': 998, 'cv': 200, 'co2': 155},  # Vision GT
+        21: {'pv': 1350, 'pm': 1900, 'permis': 'B', 'pl': 5, 'cyl': 1461, 'cv': 116, 'co2': 120}, # Classe A
+        22: {'pv': 1800, 'pm': 2400, 'permis': 'B', 'pl': 5, 'cyl': 1993, 'cv': 190, 'co2': 160}, # GLC
+        23: {'pv': 2600, 'pm': 5000, 'permis': 'C', 'pl': 3, 'cyl': 2143, 'cv': 163, 'co2': 215}, # Sprinter 5t
+        24: {'pv': 2900, 'pm': 4800, 'permis': 'C', 'pl': 3, 'cyl': 4250, 'cv': 170, 'co2': 230}, # Vario
 
         # IVECO (25-30)
-        25: {'poids_vide': 150, 'poids_max': 330, 'categorie_permis': 'A2', 'places_assises': 2, 'cylindree': 300, 'puissance_chevaux': 28, 'emission_co2': 70},
-        26: {'poids_vide': 220, 'poids_max': 420, 'categorie_permis': 'A', 'places_assises': 2, 'cylindree': 1100, 'puissance_chevaux': 210, 'emission_co2': 165},
-        27: {'poids_vide': 2000, 'poids_max': 2800, 'categorie_permis': 'B', 'places_assises': 5, 'cylindree': 2998, 'puissance_chevaux': 176, 'emission_co2': 200},
-        28: {'poids_vide': 1900, 'poids_max': 2600, 'categorie_permis': 'B', 'places_assises': 5, 'cylindree': 2500, 'puissance_chevaux': 150, 'emission_co2': 190},
-        29: {'poids_vide': 2200, 'poids_max': 3500, 'categorie_permis': 'C', 'places_assises': 3, 'cylindree': 2300, 'puissance_chevaux': 140, 'emission_co2': 225},
-        30: {'poids_vide': 2500, 'poids_max': 5000, 'categorie_permis': 'C', 'places_assises': 3, 'cylindree': 2998, 'puissance_chevaux': 180, 'emission_co2': 245},
+        25: {'pv': 150, 'pm': 330, 'permis': 'A2', 'pl': 2, 'cyl': 300, 'cv': 28, 'co2': 70},    # Daily Moto
+        26: {'pv': 220, 'pm': 420, 'permis': 'A', 'pl': 2, 'cyl': 1100, 'cv': 210, 'co2': 165},   # Turbo Bike
+        27: {'pv': 2000, 'pm': 2800, 'permis': 'B', 'pl': 5, 'cyl': 2998, 'cv': 176, 'co2': 200}, # Massif
+        28: {'pv': 1900, 'pm': 2600, 'permis': 'B', 'pl': 5, 'cyl': 2500, 'cv': 150, 'co2': 190}, # Campagnola
+        29: {'pv': 2200, 'pm': 3500, 'permis': 'C', 'pl': 3, 'cyl': 2300, 'cv': 140, 'co2': 225}, # Daily 35C
+        30: {'pv': 2500, 'pm': 5000, 'permis': 'C', 'pl': 3, 'cyl': 2998, 'cv': 180, 'co2': 245}, # Daily 50C
 
         # FORD (31-36)
-        31: {'poids_vide': 115, 'poids_max': 290, 'categorie_permis': 'A1', 'places_assises': 2, 'cylindree': 125, 'puissance_chevaux': 10, 'emission_co2': 50},
-        32: {'poids_vide': 170, 'poids_max': 360, 'categorie_permis': 'A2', 'places_assises': 2, 'cylindree': 450, 'puissance_chevaux': 35, 'emission_co2': 78},
-        33: {'poids_vide': 1150, 'poids_max': 1650, 'categorie_permis': 'B', 'places_assises': 5, 'cylindree': 999, 'puissance_chevaux': 95, 'emission_co2': 115},
-        34: {'poids_vide': 1300, 'poids_max': 1850, 'categorie_permis': 'B', 'places_assises': 5, 'cylindree': 1498, 'puissance_chevaux': 120, 'emission_co2': 125},
-        35: {'poids_vide': 2100, 'poids_max': 3500, 'categorie_permis': 'C', 'places_assises': 3, 'cylindree': 1995, 'puissance_chevaux': 130, 'emission_co2': 210},
-        36: {'poids_vide': 2800, 'poids_max': 4700, 'categorie_permis': 'C', 'places_assises': 3, 'cylindree': 1995, 'puissance_chevaux': 170, 'emission_co2': 245},
+        31: {'pv': 115, 'pm': 290, 'permis': 'A1', 'pl': 2, 'cyl': 125, 'cv': 10, 'co2': 50},    # Street 125
+        32: {'pv': 170, 'pm': 360, 'permis': 'A2', 'pl': 2, 'cyl': 450, 'cv': 35, 'co2': 78},    # Ranger Bike
+        33: {'pv': 1150, 'pm': 1650, 'permis': 'B', 'pl': 5, 'cyl': 999, 'cv': 95, 'co2': 115},   # Fiesta
+        34: {'pv': 1300, 'pm': 1850, 'permis': 'B', 'pl': 5, 'cyl': 1498, 'cv': 120, 'co2': 125}, # Focus
+        35: {'pv': 2100, 'pm': 3500, 'permis': 'C', 'pl': 3, 'cyl': 1995, 'cv': 130, 'co2': 210}, # Transit 350
+        36: {'pv': 2800, 'pm': 4700, 'permis': 'C', 'pl': 3, 'cyl': 1995, 'cv': 170, 'co2': 245}, # Transit 470
     }
 
 
