@@ -14,10 +14,6 @@
 <body>
 <h2> Nouvelle Carte Grise</h2>
 
-<div class="info-box">
-    <p><strong>Information:</strong> Les numéros de carte grise et de plaque d'immatriculation seront générés automatiquement.</p>
-</div>
-
 <form method="POST" action="{{ url_for('add_carte_grise') }}" novalidate>
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     
@@ -123,6 +119,12 @@
         <a href="{{ url_for('index') }}" class="btn btn-secondary"> Annuler</a>
     </div>
 </form>
+
+<div class="info-box">
+    <p><strong>Information:</strong> Les numéros de carte grise et de plaque d'immatriculation seront générés automatiquement.</p>
+</div>
+
+
 </body>
 </html>
 
