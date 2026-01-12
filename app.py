@@ -90,15 +90,31 @@ def add_carte_grise():
         17: {'pv': 2200, 'pm': 3500, 'permis': 'C', 'pl': 3, 'cyl': 2299, 'cv': 135, 'co2': 240}, # Master
         18: {'pv': 2400, 'pm': 4500, 'permis': 'C', 'pl': 3, 'cyl': 2488, 'cv': 140, 'co2': 250}, # Maxity
 
-        # RENAULT (IDs 13 à 18)
-        13: {'pv': 120, 'pm': 300, 'permis': 'A1', 'pl': 2, 'cyl': 124, 'cv': 11, 'co2': 55},     # Full 125
-        14: {'pv': 160, 'pm': 340, 'permis': 'A2', 'pl': 2, 'cyl': 395, 'cv': 30, 'co2': 75},     # Sport 400
-        15: {'pv': 1100, 'pm': 1600, 'permis': 'B', 'pl': 5, 'cyl': 999, 'cv': 90, 'co2': 110},   # Clio
-        16: {'pv': 1400, 'pm': 1950, 'permis': 'B', 'pl': 5, 'cyl': 1332, 'cv': 140, 'co2': 130}, # Austral
-        17: {'pv': 2200, 'pm': 3500, 'permis': 'C', 'pl': 3, 'cyl': 2299, 'cv': 135, 'co2': 240}, # Master
-        18: {'pv': 2400, 'pm': 4500, 'permis': 'C', 'pl': 3, 'cyl': 2488, 'cv': 140, 'co2': 250}, # Maxity
+       # MERCEDES (19-24)
+        19: {'poids_vide': 130, 'poids_max': 310, 'categorie_permis': 'A1', 'places_assises': 2, 'cylindree': 125, 'puissance_chevaux': 12, 'emission_co2': 60},
+        20: {'poids_vide': 210, 'poids_max': 400, 'categorie_permis': 'A', 'places_assises': 2, 'cylindree': 998, 'puissance_chevaux': 200, 'emission_co2': 155},
+        21: {'poids_vide': 1350, 'poids_max': 1900, 'categorie_permis': 'B', 'places_assises': 5, 'cylindree': 1461, 'puissance_chevaux': 116, 'emission_co2': 120},
+        22: {'poids_vide': 1800, 'poids_max': 2400, 'categorie_permis': 'B', 'places_assises': 5, 'cylindree': 1993, 'puissance_chevaux': 190, 'emission_co2': 160},
+        23: {'poids_vide': 2600, 'poids_max': 5000, 'categorie_permis': 'C', 'places_assises': 3, 'cylindree': 2143, 'puissance_chevaux': 163, 'emission_co2': 215},
+        24: {'poids_vide': 2900, 'poids_max': 4800, 'categorie_permis': 'C', 'places_assises': 3, 'cylindree': 4250, 'puissance_chevaux': 170, 'emission_co2': 230},
 
+        # IVECO (25-30)
+        25: {'poids_vide': 150, 'poids_max': 330, 'categorie_permis': 'A2', 'places_assises': 2, 'cylindree': 300, 'puissance_chevaux': 28, 'emission_co2': 70},
+        26: {'poids_vide': 220, 'poids_max': 420, 'categorie_permis': 'A', 'places_assises': 2, 'cylindree': 1100, 'puissance_chevaux': 210, 'emission_co2': 165},
+        27: {'poids_vide': 2000, 'poids_max': 2800, 'categorie_permis': 'B', 'places_assises': 5, 'cylindree': 2998, 'puissance_chevaux': 176, 'emission_co2': 200},
+        28: {'poids_vide': 1900, 'poids_max': 2600, 'categorie_permis': 'B', 'places_assises': 5, 'cylindree': 2500, 'puissance_chevaux': 150, 'emission_co2': 190},
+        29: {'poids_vide': 2200, 'poids_max': 3500, 'categorie_permis': 'C', 'places_assises': 3, 'cylindree': 2300, 'puissance_chevaux': 140, 'emission_co2': 225},
+        30: {'poids_vide': 2500, 'poids_max': 5000, 'categorie_permis': 'C', 'places_assises': 3, 'cylindree': 2998, 'puissance_chevaux': 180, 'emission_co2': 245},
+
+        # FORD (31-36)
+        31: {'poids_vide': 115, 'poids_max': 290, 'categorie_permis': 'A1', 'places_assises': 2, 'cylindree': 125, 'puissance_chevaux': 10, 'emission_co2': 50},
+        32: {'poids_vide': 170, 'poids_max': 360, 'categorie_permis': 'A2', 'places_assises': 2, 'cylindree': 450, 'puissance_chevaux': 35, 'emission_co2': 78},
+        33: {'poids_vide': 1150, 'poids_max': 1650, 'categorie_permis': 'B', 'places_assises': 5, 'cylindree': 999, 'puissance_chevaux': 95, 'emission_co2': 115},
+        34: {'poids_vide': 1300, 'poids_max': 1850, 'categorie_permis': 'B', 'places_assises': 5, 'cylindree': 1498, 'puissance_chevaux': 120, 'emission_co2': 125},
+        35: {'poids_vide': 2100, 'poids_max': 3500, 'categorie_permis': 'C', 'places_assises': 3, 'cylindree': 1995, 'puissance_chevaux': 130, 'emission_co2': 210},
+        36: {'poids_vide': 2800, 'poids_max': 4700, 'categorie_permis': 'C', 'places_assises': 3, 'cylindree': 1995, 'puissance_chevaux': 170, 'emission_co2': 245},
     }
+
 
     # Récupération des modèles de véhicules pour le menu déroulant (Nécessaire pour GET et POST)
     query_modeles = """
