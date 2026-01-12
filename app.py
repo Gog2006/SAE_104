@@ -81,40 +81,43 @@ def add_carte_grise():
         10: {'pv': 1500, 'pm': 2100, 'permis': 'B', 'pl': 7, 'cyl': 1598, 'cv': 180, 'co2': 140},# 5008
         11: {'pv': 2100, 'pm': 4400, 'permis': 'C', 'pl': 3, 'cyl': 2179, 'cv': 140, 'co2': 230},# Boxer
         12: {'pv': 1800, 'pm': 3100, 'permis': 'C', 'pl': 3, 'cyl': 1997, 'cv': 145, 'co2': 190},# Expert
-        # ... (Le reste des IDs suivrait la même logique)
+       
+       # RENAULT (IDs 13 à 18)
+        13: {'pv': 120, 'pm': 300, 'permis': 'A1', 'pl': 2, 'cyl': 124, 'cv': 11, 'co2': 55},     # Full 125
+        14: {'pv': 160, 'pm': 340, 'permis': 'A2', 'pl': 2, 'cyl': 395, 'cv': 30, 'co2': 75},     # Sport 400
+        15: {'pv': 1100, 'pm': 1600, 'permis': 'B', 'pl': 5, 'cyl': 999, 'cv': 90, 'co2': 110},   # Clio
+        16: {'pv': 1400, 'pm': 1950, 'permis': 'B', 'pl': 5, 'cyl': 1332, 'cv': 140, 'co2': 130}, # Austral
+        17: {'pv': 2200, 'pm': 3500, 'permis': 'C', 'pl': 3, 'cyl': 2299, 'cv': 135, 'co2': 240}, # Master
+        18: {'pv': 2400, 'pm': 4500, 'permis': 'C', 'pl': 3, 'cyl': 2488, 'cv': 140, 'co2': 250}, # Maxity
+
+        # RENAULT (IDs 13 à 18)
+        13: {'pv': 120, 'pm': 300, 'permis': 'A1', 'pl': 2, 'cyl': 124, 'cv': 11, 'co2': 55},     # Full 125
+        14: {'pv': 160, 'pm': 340, 'permis': 'A2', 'pl': 2, 'cyl': 395, 'cv': 30, 'co2': 75},     # Sport 400
+        15: {'pv': 1100, 'pm': 1600, 'permis': 'B', 'pl': 5, 'cyl': 999, 'cv': 90, 'co2': 110},   # Clio
+        16: {'pv': 1400, 'pm': 1950, 'permis': 'B', 'pl': 5, 'cyl': 1332, 'cv': 140, 'co2': 130}, # Austral
+        17: {'pv': 2200, 'pm': 3500, 'permis': 'C', 'pl': 3, 'cyl': 2299, 'cv': 135, 'co2': 240}, # Master
+        18: {'pv': 2400, 'pm': 4500, 'permis': 'C', 'pl': 3, 'cyl': 2488, 'cv': 140, 'co2': 250}, # Maxity
+
     }
 
     # Récupération des modèles de véhicules pour le menu déroulant (Nécessaire pour GET et POST)
-    modeles = db.fetch_all("""
-        SELECT m.id, m.modele, m.type_vehicule, ma.nom as marque_nom, c.nom as categorie_nom
+    query_modeles = """
+        SELECT m.id, m.modele, m.type_vehicule, ma.nom as marque_nom
         FROM modeles m
         JOIN marques ma ON m.marque_id = ma.id
-        JOIN categories_vehicule c ON m.categorie_id = c.id
         ORDER BY ma.nom, m.modele
-    """)
+    """
+    modeles = db.fetch_all(query_modeles)
 
+    prefilled_data = None
+    form_data = request.form
 
     if request.method == 'POST':
         # --- CAS 1 : C'est une demande d'auto-remplissage des données techniques ---
-        if 'btn_charger' in request.form:
+        if 'modele_id' in request.form and 'btn_save' not in request.form:
             modele_id = request.form.get('modele_id')
-            prefilled_data = {}
-            
-            # Récupération des données déjà saisies pour ne pas les perdre
-            form_data = request.form
-            
             if modele_id and int(modele_id) in DONNEES_TECHNIQUES_REF:
-                ref = DONNEES_TECHNIQUES_REF[int(modele_id)]
-                prefilled_data = {
-                    'poids_vide': ref['pv'],
-                    'poids_max': ref['pm'],
-                    'categorie_permis': ref['permis'],
-                    'places_assises': ref['pl'],
-                    'cylindree': ref['cyl'],
-                    'puissance_chevaux': ref['cv'],
-                    'emission_co2': ref['co2']
-                }
-                flash('Caractéristiques techniques chargées.', 'info')
+                prefilled_data = DONNEES_TECHNIQUES_REF[int(modele_id)]
             
             # Réaffichage du formulaire avec les données pré-remplies
             return render_template('add.html', modeles=modeles, form_data=form_data, prefilled=prefilled_data)
