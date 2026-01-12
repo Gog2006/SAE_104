@@ -7,7 +7,7 @@
     --danger-color: #7a0c00;        /* Couleur de danger (rouge foncé) */
     --danger-hover: #c0392b;        /* Couleur de danger au survol */
     --grey-color: #000000;          /* Couleur grise (noir) */
-    --grey-hover: #000000;          /* Couleur grise au survol */
+    --grey-hover: #c20000;          /* Couleur grise au survol */
 }
 
 /* Style général de tous les éléments */
@@ -124,6 +124,7 @@ h4 {
 
 .btn-secondary:hover {
     background: var(--grey-hover);
+    color: white;
 }
 
 /* Positionnement spécifique du bouton charger modèle */
@@ -132,6 +133,11 @@ h4 {
     margin-top: 12px;
     margin-left: auto;
     margin-right: 0;
+}
+/*. Application du gris au survol spécifiquement pour "Charger modèle" */
+.btn-load-right:hover {
+    background: var(--success-color) !important; 
+    color: white;
 }
 .btn-small {
     padding: 10px 22px;

@@ -71,7 +71,7 @@
         </div>
         
         <div class="form-group">
-            <label for="places_assises">Nombre de places assises</label>
+            <label for="places_assises">Nombre de places assises*</label>
             <input type="number" id="places_assises" name="places_assises" min="1" max="50" placeholder="5"
                    value="{{ prefilled.places_assises if prefilled else request.form.places_assises or '' }}">
         </div>
@@ -81,20 +81,20 @@
 
     <div class="form-row">
         <div class="form-group">
-            <label for="cylindree">Cylindrée (cm³)</label>
+            <label for="cylindree">Cylindrée (cm³)*</label>
             <input type="number" id="cylindree" name="cylindree" min="0" placeholder="1560"
                    value="{{ prefilled.cylindree if prefilled else request.form.cylindree or '' }}">
         </div>
         
         <div class="form-group">
-            <label for="puissance_chevaux">Puissance (chevaux)</label>
+            <label for="puissance_chevaux">Puissance (chevaux)*</label>
             <input type="number" id="puissance_chevaux" name="puissance_chevaux" min="0" placeholder="130"
                    value="{{ prefilled.puissance_chevaux if prefilled else request.form.puissance_chevaux or '' }}">
         </div>
     </div>
     
     <div class="form-group">
-        <label for="emission_co2">Émission CO2 (g/km)</label>
+        <label for="emission_co2">Émission CO2 (g/km)*</label>
         <input type="number" id="emission_co2" name="emission_co2" min="0" placeholder="110"
                value="{{ prefilled.emission_co2 if prefilled else request.form.emission_co2 or '' }}">
     </div>
