@@ -43,7 +43,7 @@
                 <td>{{ carte.emission_co2_g_km if carte.emission_co2_g_km else 'N/A' }}</td>
                 <td>
                     <div class="actions">
-                        <a href="{{ url_for('edit_carte_grise', carte_id=carte.id) }}" class="btn btn-small">✏️ Modifier</a>
+                        <a href="{{ url_for('edit_carte_grise', carte_id=carte.id) }}" class="btn btn-small"> Modifier</a>
                         <form method="POST" action="{{ url_for('delete_carte_grise', carte_id=carte.id) }}" class="actions-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette carte grise?');">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                             <button type="submit" class="btn btn-danger btn-small">🗑️ Supprimer</button>
