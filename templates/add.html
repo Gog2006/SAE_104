@@ -18,7 +18,7 @@
     <p><strong>Information:</strong> Les numéros de carte grise et de plaque d'immatriculation seront générés automatiquement.</p>
 </div>
 
-<form method="POST" action="{{ url_for('add_carte_grise') }}">
+<form method="POST" action="{{ url_for('add_carte_grise') }}" novalidate>
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     
     <h3 style="margin-top: 20px; color: var(--grey-color);">Informations du Propriétaire</h3>
@@ -45,7 +45,7 @@
     <div class="form-row">
         <div class="form-group">
             <label for="modele_id">Marque et Modèle *</label>
-            <select id="modele_id" name="modele_id" required>
+            <select id="modele_id" name="modele_id" required onchange="this.form.submit()">
                 <option value="">-- Sélectionnez un modèle --</option>
                 {% for modele in modeles %}
                 <option value="{{ modele.id }}">{{ modele.marque_nom }} - {{ modele.modele }} ({{ modele.type_vehicule }})</option>
