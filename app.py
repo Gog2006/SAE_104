@@ -292,25 +292,138 @@ def add_carte_grise():
 @app.route('/edit/<int:carte_id>', methods=['GET', 'POST'])
 def edit_carte_grise(carte_id):
     """Modification d'une carte grise existante"""
+    
+    # Données techniques de référence (same as add route)
+    DONNEES_TECHNIQUES_REF = {
+        # Honda
+        1: {'pv': 190, 'pm': 370, 'permis': 'A2', 'pl': 2, 'cyl': 471, 'cv': 48, 'co2': 80, 'classe': 'Euro 5'},
+        2: {'pv': 201, 'pm': 390, 'permis': 'A', 'pl': 2, 'cyl': 999, 'cv': 217, 'co2': 160, 'classe': 'Euro 4'},
+        3: {'pv': 1300, 'pm': 1800, 'permis': 'B', 'pl': 5, 'cyl': 1498, 'cv': 182, 'co2': 128, 'classe': 'Euro 6d'},
+        4: {'pv': 1600, 'pm': 2200, 'permis': 'B', 'pl': 5, 'cyl': 1993, 'cv': 184, 'co2': 153, 'classe': 'Euro 6d'},
+        5: {'pv': 2800, 'pm': 4500, 'permis': 'C', 'pl': 3, 'cyl': 2999, 'cv': 150, 'co2': 210, 'classe': 'Euro 6'},
+        6: {'pv': 2600, 'pm': 3500, 'permis': 'C', 'pl': 3, 'cyl': 2488, 'cv': 130, 'co2': 220, 'classe': 'Euro 6'},
+        7: {'pv': 95, 'pm': 270, 'permis': 'A1', 'pl': 2, 'cyl': 49, 'cv': 4, 'co2': 45, 'classe': 'Euro 5'},
+        8: {'pv': 280, 'pm': 450, 'permis': 'A', 'pl': 2, 'cyl': 399, 'cv': 36, 'co2': 89, 'classe': 'Euro 5'},
+        9: {'pv': 1050, 'pm': 1550, 'permis': 'B', 'pl': 5, 'cyl': 1199, 'cv': 100, 'co2': 102, 'classe': 'Euro 6d'},
+        10: {'pv': 1500, 'pm': 2100, 'permis': 'B', 'pl': 7, 'cyl': 1598, 'cv': 180, 'co2': 140, 'classe': 'Euro 6d'},
+        11: {'pv': 2100, 'pm': 4400, 'permis': 'C', 'pl': 3, 'cyl': 2179, 'cv': 140, 'co2': 230, 'classe': 'Euro 6'},
+        12: {'pv': 1800, 'pm': 3100, 'permis': 'C', 'pl': 3, 'cyl': 1997, 'cv': 145, 'co2': 190, 'classe': 'Euro 6'},
+        13: {'pv': 120, 'pm': 300, 'permis': 'A1', 'pl': 2, 'cyl': 124, 'cv': 11, 'co2': 55, 'classe': 'Euro 5'},
+        14: {'pv': 160, 'pm': 340, 'permis': 'A2', 'pl': 2, 'cyl': 395, 'cv': 30, 'co2': 75, 'classe': 'Euro 5'},
+        15: {'pv': 1100, 'pm': 1600, 'permis': 'B', 'pl': 5, 'cyl': 999, 'cv': 90, 'co2': 110, 'classe': 'Euro 6d'},
+        16: {'pv': 1400, 'pm': 1950, 'permis': 'B', 'pl': 5, 'cyl': 1332, 'cv': 140, 'co2': 130, 'classe': 'Euro 6d'},
+        17: {'pv': 2200, 'pm': 3500, 'permis': 'C', 'pl': 3, 'cyl': 2299, 'cv': 135, 'co2': 240, 'classe': 'Euro 6'},
+        18: {'pv': 2400, 'pm': 4500, 'permis': 'C', 'pl': 3, 'cyl': 2488, 'cv': 140, 'co2': 250, 'classe': 'Euro 6'},
+        19: {'pv': 130, 'pm': 310, 'permis': 'A1', 'pl': 2, 'cyl': 125, 'cv': 12, 'co2': 60, 'classe': 'Euro 5'},
+        20: {'pv': 210, 'pm': 400, 'permis': 'A', 'pl': 2, 'cyl': 998, 'cv': 200, 'co2': 155, 'classe': 'Euro 4'},
+        21: {'pv': 1350, 'pm': 1900, 'permis': 'B', 'pl': 5, 'cyl': 1461, 'cv': 116, 'co2': 120, 'classe': 'Euro 6d'},
+        22: {'pv': 1800, 'pm': 2400, 'permis': 'B', 'pl': 5, 'cyl': 1993, 'cv': 190, 'co2': 160, 'classe': 'Euro 6d'},
+        23: {'pv': 2600, 'pm': 5000, 'permis': 'C', 'pl': 3, 'cyl': 2143, 'cv': 163, 'co2': 215, 'classe': 'Euro 6'},
+        24: {'pv': 2900, 'pm': 4800, 'permis': 'C', 'pl': 3, 'cyl': 4250, 'cv': 170, 'co2': 230, 'classe': 'Euro 6'},
+        25: {'pv': 150, 'pm': 330, 'permis': 'A2', 'pl': 2, 'cyl': 300, 'cv': 28, 'co2': 70, 'classe': 'Euro 5'},
+        26: {'pv': 220, 'pm': 420, 'permis': 'A', 'pl': 2, 'cyl': 1100, 'cv': 210, 'co2': 165, 'classe': 'Euro 4'},
+        27: {'pv': 2000, 'pm': 2800, 'permis': 'B', 'pl': 5, 'cyl': 2998, 'cv': 176, 'co2': 200, 'classe': 'Euro 6'},
+        28: {'pv': 1900, 'pm': 2600, 'permis': 'B', 'pl': 5, 'cyl': 2500, 'cv': 150, 'co2': 190, 'classe': 'Euro 6'},
+        29: {'pv': 2200, 'pm': 3500, 'permis': 'C', 'pl': 3, 'cyl': 2300, 'cv': 140, 'co2': 225, 'classe': 'Euro 6'},
+        30: {'pv': 2500, 'pm': 5000, 'permis': 'C', 'pl': 3, 'cyl': 2998, 'cv': 180, 'co2': 245, 'classe': 'Euro 6'},
+        31: {'pv': 115, 'pm': 290, 'permis': 'A1', 'pl': 2, 'cyl': 125, 'cv': 10, 'co2': 50, 'classe': 'Euro 5'},
+        32: {'pv': 170, 'pm': 360, 'permis': 'A2', 'pl': 2, 'cyl': 450, 'cv': 35, 'co2': 78, 'classe': 'Euro 5'},
+        33: {'pv': 1150, 'pm': 1650, 'permis': 'B', 'pl': 5, 'cyl': 999, 'cv': 95, 'co2': 115, 'classe': 'Euro 6d'},
+        34: {'pv': 1300, 'pm': 1850, 'permis': 'B', 'pl': 5, 'cyl': 1498, 'cv': 120, 'co2': 125, 'classe': 'Euro 6d'},
+        35: {'pv': 2100, 'pm': 3500, 'permis': 'C', 'pl': 3, 'cyl': 1995, 'cv': 130, 'co2': 210, 'classe': 'Euro 6'},
+        36: {'pv': 2800, 'pm': 4700, 'permis': 'C', 'pl': 3, 'cyl': 1995, 'cv': 170, 'co2': 245, 'classe': 'Euro 6'},
+    }
+    
+    # Récupération des modèles
+    query_modeles = """
+        SELECT m.id, m.modele, m.type_vehicule, ma.nom as marque_nom
+        FROM modeles m
+        JOIN marques ma ON m.marque_id = ma.id
+        ORDER BY ma.nom, m.modele
+    """
+    modeles = db.fetch_all(query_modeles)
+    
+    prefilled_data = None
+    selected_modele_id = None
+    
     if request.method == 'POST':
+        # --- CAS 1 : Clic sur 'Charger modèle' pour auto-remplir
+        if 'btn_load' in request.form and 'modele_id' in request.form:
+            modele_id = request.form.get('modele_id')
+            if modele_id and int(modele_id) in DONNEES_TECHNIQUES_REF:
+                ref = DONNEES_TECHNIQUES_REF[int(modele_id)]
+                prefilled_data = {
+                    'poids_vide': ref.get('pv'),
+                    'poids_max': ref.get('pm'),
+                    'categorie_permis': ref.get('permis'),
+                    'places_assises': ref.get('pl'),
+                    'cylindree': ref.get('cyl'),
+                    'puissance_chevaux': ref.get('cv'),
+                    'emission_co2': ref.get('co2'),
+                    'classe_environnementale': ref.get('classe')
+                }
+                selected_modele_id = modele_id
+            
+            # Récupération des données de la carte grise pour l'affichage
+            carte = db.fetch_one("""
+                SELECT cg.*, 
+                       p.nom, p.prenom, p.adresse,
+                       mo.modele, mo.type_vehicule,
+                       ma.nom as marque_nom
+                FROM cartes_grises cg
+                JOIN proprietaires p ON cg.proprietaire_id = p.id
+                JOIN modeles mo ON cg.modele_id = mo.id
+                JOIN marques ma ON mo.marque_id = ma.id
+                WHERE cg.id = %s
+            """, (carte_id,))
+            
+            return render_template('edit.html', carte=carte, modeles=modeles, prefilled=prefilled_data, selected_modele_id=selected_modele_id)
+        
+        # --- CAS 2 : Enregistrement des modifications
         try:
             # Récupération des données du formulaire
+            nom = str(escape(request.form.get('nom', '').strip()))
+            prenom = str(escape(request.form.get('prenom', '').strip()))
+            adresse = str(escape(request.form.get('adresse', '').strip()))
+            modele_id = request.form.get('modele_id')
+            date_premiere_immat = request.form.get('date_premiere_immat')
+            categorie_permis = request.form.get('categorie_permis')
             poids_vide = request.form.get('poids_vide')
             poids_max = request.form.get('poids_max')
+            places_assises = request.form.get('places_assises')
             cylindree = request.form.get('cylindree')
             puissance_chevaux = request.form.get('puissance_chevaux')
             emission_co2 = request.form.get('emission_co2')
             classe_env = str(escape(request.form.get('classe_environnementale', '').strip()))
             
+            # Validation des champs obligatoires
+            if not all([nom, prenom, adresse, modele_id, date_premiere_immat, categorie_permis]):
+                flash('Les champs nom, prénom, adresse, modèle, date et catégorie de permis sont obligatoires!', 'error')
+                return redirect(url_for('edit_carte_grise', carte_id=carte_id))
+            
+            # Vérification ou création du propriétaire
+            query_prop = "SELECT id FROM proprietaires WHERE nom=%s AND prenom=%s AND adresse=%s"
+            proprietaire = db.fetch_one(query_prop, (nom, prenom, adresse))
+            
+            if not proprietaire:
+                insert_prop = "INSERT INTO proprietaires (nom, prenom, adresse) VALUES (%s, %s, %s)"
+                proprietaire_id = db.execute_query(insert_prop, (nom, prenom, adresse))
+            else:
+                proprietaire_id = proprietaire['id']
+            
             # Mise à jour de la carte grise
             update_query = """
                 UPDATE cartes_grises 
-                SET poids_vide_kg=%s, poids_max_kg=%s, cylindree_cm3=%s,
-                    puissance_chevaux=%s, emission_co2_g_km=%s, classe_environnementale=%s
+                SET proprietaire_id=%s, modele_id=%s, date_premiere_immat=%s, categorie_permis=%s,
+                    poids_vide_kg=%s, poids_max_kg=%s, places_assises=%s,
+                    cylindree_cm3=%s, puissance_chevaux=%s, emission_co2_g_km=%s,
+                    classe_environnementale=%s
                 WHERE id=%s
             """
             params = (
+                proprietaire_id, modele_id, date_premiere_immat, categorie_permis,
                 poids_vide, poids_max,
+                places_assises if places_assises else None,
                 cylindree if cylindree else None,
                 puissance_chevaux if puissance_chevaux else None,
                 emission_co2 if emission_co2 else None,
@@ -344,7 +457,7 @@ def edit_carte_grise(carte_id):
         flash('Carte grise introuvable!', 'error')
         return redirect(url_for('index'))
     
-    return render_template('edit.html', carte=carte)
+    return render_template('edit.html', carte=carte, modeles=modeles, prefilled=prefilled_data, selected_modele_id=selected_modele_id)
 
 @app.route('/delete/<int:carte_id>', methods=['POST'])
 def delete_carte_grise(carte_id):

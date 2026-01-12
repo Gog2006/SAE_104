@@ -24,45 +24,104 @@
 <form method="POST" action="{{ url_for('edit_carte_grise', carte_id=carte.id) }}">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     
-    <h3>Caractéristiques Modifiables</h3>
+    <h3 style="margin-top: 20px; color: var(--grey-color);">Informations du Propriétaire</h3>
     
     <div class="form-row">
         <div class="form-group">
-            <label for="poids_vide">Poids à vide (kg)</label>
-            <input type="number" id="poids_vide" name="poids_vide" value="{{ carte.poids_vide_kg }}" min="100">
+            <label for="nom">Nom *</label>
+            <input type="text" id="nom" name="nom" required value="{{ carte.nom }}" placeholder="Dupont">
         </div>
         
         <div class="form-group">
-            <label for="poids_max">Poids maximal (kg)</label>
-            <input type="number" id="poids_max" name="poids_max" value="{{ carte.poids_max_kg }}" min="100">
+            <label for="prenom">Prénom *</label>
+            <input type="text" id="prenom" name="prenom" required value="{{ carte.prenom }}" placeholder="Jean">
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="adresse">Adresse *</label>
+        <input type="text" id="adresse" name="adresse" required value="{{ carte.adresse }}" placeholder="15 Rue de la Paix, 75001 Paris">
+    </div>
+    
+    <h3 style="margin-top: 20px; color: var(--grey-color);">Informations du Véhicule</h3>
+    
+    <div class="form-row">
+        <div class="form-group">
+            <label for="modele_id">Marque et Modèle *</label>
+            <select id="modele_id" name="modele_id" required>
+                <option value="">-- Sélectionnez un modèle --</option>
+                {% for modele in modeles %}
+                <option value="{{ modele.id }}" {% if (selected_modele_id and selected_modele_id == (modele.id|string)) or (carte.modele_id == modele.id) %}selected{% endif %}>{{ modele.marque_nom }} - {{ modele.modele }} ({{ modele.type_vehicule }})</option>
+                {% endfor %}
+            </select>
+            <button type="submit" name="btn_load" class="btn btn-small btn-load-right">Charger modèle</button>
+        </div>
+        
+        <div class="form-group">
+            <label for="date_premiere_immat">Date de Première Immatriculation *</label>
+            <input type="date" id="date_premiere_immat" name="date_premiere_immat" required min="2020-01-01" max="2026-12-31" value="{{ carte.date_premiere_immat.strftime('%Y-%m-%d') if carte.date_premiere_immat else '' }}">
         </div>
     </div>
     
     <div class="form-row">
         <div class="form-group">
+            <label for="categorie_permis">Catégorie de Permis *</label>
+            <select id="categorie_permis" name="categorie_permis" required>
+                <option value="">-- Sélectionnez --</option>
+                {% set selected_permis = prefilled.categorie_permis if prefilled else carte.categorie_permis %}
+                <option value="A1" {% if selected_permis == 'A1' %}selected{% endif %}>A1 - Moto légère</option>
+                <option value="A2" {% if selected_permis == 'A2' %}selected{% endif %}>A2 - Moto moyenne</option>
+                <option value="A" {% if selected_permis == 'A' %}selected{% endif %}>A - Moto</option>
+                <option value="B" {% if selected_permis == 'B' %}selected{% endif %}>B - Automobile</option>
+                <option value="C" {% if selected_permis == 'C' %}selected{% endif %}>C - Camion léger</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-group">
+            <label for="poids_vide">Poids à vide (kg) *</label>
+            <input type="number" id="poids_vide" name="poids_vide" required value="{{ prefilled.poids_vide if prefilled else carte.poids_vide_kg }}" min="100">
+        </div>
+        
+        <div class="form-group">
+            <label for="poids_max">Poids maximal (kg) *</label>
+            <input type="number" id="poids_max" name="poids_max" required value="{{ prefilled.poids_max if prefilled else carte.poids_max_kg }}" min="100">
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="places_assises">Nombre de places assises</label>
+        <input type="number" id="places_assises" name="places_assises" value="{{ prefilled.places_assises if prefilled else (carte.places_assises if carte.places_assises else '') }}" min="1" max="50" placeholder="5">
+    </div>
+    
+    <h3 style="margin-top: 20px; color: var(--grey-color);">Caractéristiques Techniques</h3>
+    
+    <div class="form-row">
+        <div class="form-group">
             <label for="cylindree">Cylindrée (cm³)</label>
-            <input type="number" id="cylindree" name="cylindree" value="{{ carte.cylindree_cm3 if carte.cylindree_cm3 else '' }}" min="0">
+            <input type="number" id="cylindree" name="cylindree" value="{{ prefilled.cylindree if prefilled else (carte.cylindree_cm3 if carte.cylindree_cm3 else '') }}" min="0" placeholder="1560">
         </div>
         
         <div class="form-group">
             <label for="puissance_chevaux">Puissance (chevaux)</label>
-            <input type="number" id="puissance_chevaux" name="puissance_chevaux" value="{{ carte.puissance_chevaux if carte.puissance_chevaux else '' }}" min="0">
+            <input type="number" id="puissance_chevaux" name="puissance_chevaux" value="{{ prefilled.puissance_chevaux if prefilled else (carte.puissance_chevaux if carte.puissance_chevaux else '') }}" min="0" placeholder="130">
         </div>
     </div>
     
     <div class="form-row">
         <div class="form-group">
             <label for="emission_co2">Émission CO2 (g/km)</label>
-            <input type="number" id="emission_co2" name="emission_co2" value="{{ carte.emission_co2_g_km if carte.emission_co2_g_km else '' }}" min="0">
+            <input type="number" id="emission_co2" name="emission_co2" value="{{ prefilled.emission_co2 if prefilled else (carte.emission_co2_g_km if carte.emission_co2_g_km else '') }}" min="0" placeholder="110">
         </div>
         
         <div class="form-group">
             <label for="classe_environnementale">Classe Environnementale</label>
-            <input type="text" id="classe_environnementale" name="classe_environnementale" value="{{ carte.classe_environnementale if carte.classe_environnementale else '' }}" placeholder="Euro 6">
+            <input type="text" id="classe_environnementale" name="classe_environnementale" value="{{ prefilled.classe_environnementale if prefilled else (carte.classe_environnementale if carte.classe_environnementale else '') }}" placeholder="Euro 6">
         </div>
     </div>
     
-    <div class="actions">
+    <div class="actions" style="margin-top: 30px;">
         <button type="submit" class="btn btn-success"> Mettre à jour</button>
         <a href="{{ url_for('index') }}" class="btn btn-secondary"> Annuler</a>
     </div>
