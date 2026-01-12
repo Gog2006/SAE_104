@@ -45,13 +45,14 @@
     <div class="form-row">
         <div class="form-group">
             <label for="modele_id">Marque et Modèle *</label>
-            <select id="modele_id" name="modele_id" required onchange="this.form.submit()">
+            <select id="modele_id" name="modele_id" required>
                 <option value="">-- Sélectionnez un modèle --</option>
                 {% for modele in modeles %}
-                <option value="{{ modele.id }}">{{ modele.marque_nom }} - {{ modele.modele }} ({{ modele.type_vehicule }})</option>
+                <option value="{{ modele.id }}" {% if (selected_modele_id and selected_modele_id == (modele.id|string)) or (request.form.modele_id == (modele.id|string)) %}selected{% endif %}>{{ modele.marque_nom }} - {{ modele.modele }} ({{ modele.type_vehicule }})</option>
                 {% endfor %}
                 
             </select>
+            <button type="submit" name="btn_load" class="btn small">Charger modèle</button>
         </div>
         
         <div class="form-group">
@@ -117,8 +118,8 @@
                value="{{ prefilled.emission_co2 if prefilled else request.form.emission_co2 or '' }}">
     </div>
     
-    <div class="actions" style="margin-top: 30px;">
-        <button type="submit" class="btn btn-success"> Créer la Carte Grise</button>
+        <div class="actions" style="margin-top: 30px;">
+        <button type="submit" name="btn_save" class="btn btn-success"> Créer la Carte Grise</button>
         <a href="{{ url_for('index') }}" class="btn btn-secondary"> Annuler</a>
     </div>
 </form>

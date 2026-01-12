@@ -113,137 +113,150 @@ def add_carte_grise():
     form_data = request.form
 
     if request.method == 'POST':
-        # --- CAS 1 : C'est une demande d'auto-remplissage des données techniques ---
-        if 'modele_id' in request.form and 'btn_save' not in request.form:
+        # --- CAS 1 : Clic sur 'Charger modèle' pour auto-remplir
+        if 'btn_load' in request.form and 'modele_id' in request.form:
             modele_id = request.form.get('modele_id')
             if modele_id and int(modele_id) in DONNEES_TECHNIQUES_REF:
-                prefilled_data = DONNEES_TECHNIQUES_REF[int(modele_id)]
-            
+                ref = DONNEES_TECHNIQUES_REF[int(modele_id)]
+                # Map reference keys to template field names
+                prefilled_data = {
+                    'poids_vide': ref.get('pv'),
+                    'poids_max': ref.get('pm'),
+                    'categorie_permis': ref.get('permis'),
+                    'places_assises': ref.get('pl'),
+                    'cylindree': ref.get('cyl'),
+                    'puissance_chevaux': ref.get('cv'),
+                    'emission_co2': ref.get('co2')
+                }
+
             # Réaffichage du formulaire avec les données pré-remplies
-            return render_template('add.html', modeles=modeles, form_data=form_data, prefilled=prefilled_data)
-            
-        try:
-            # Récupération des données du formulaire
-            nom = str(escape(request.form.get('nom', '').strip()))
-            prenom = str(escape(request.form.get('prenom', '').strip()))
-            adresse = str(escape(request.form.get('adresse', '').strip()))
-            modele_id = request.form.get('modele_id')
-            date_premiere_immat = request.form.get('date_premiere_immat')
-            poids_vide = request.form.get('poids_vide')
-            poids_max = request.form.get('poids_max')
-            categorie_permis = request.form.get('categorie_permis')
-            cylindree = request.form.get('cylindree')
-            puissance_chevaux = request.form.get('puissance_chevaux')
-            places_assises = request.form.get('places_assises')
-            emission_co2 = request.form.get('emission_co2')
-            
-            # Validation des champs obligatoires
-            if not all([nom, prenom, adresse, modele_id, date_premiere_immat]):
-                flash('Les champs nom, prénom, adresse, modèle et date sont obligatoires!', 'error')
-                return redirect(url_for('add_carte_grise'))
-            
-            # Vérification ou création du propriétaire
-            query_prop = "SELECT id FROM proprietaires WHERE nom=%s AND prenom=%s AND adresse=%s"
-            proprietaire = db.fetch_one(query_prop, (nom, prenom, adresse))
-            
-            if not proprietaire:
-                insert_prop = "INSERT INTO proprietaires (nom, prenom, adresse) VALUES (%s, %s, %s)"
-                proprietaire_id = db.execute_query(insert_prop, (nom, prenom, adresse))
-            else:
-                proprietaire_id = proprietaire['id']
-            
-            # Génération du prochain numéro de carte grise
-            last_carte = db.fetch_one("SELECT numero_carte_grise FROM cartes_grises ORDER BY id DESC LIMIT 1")
-            if last_carte and last_carte.get('numero_carte_grise'):
-                numero_carte = generer_prochain_numero_carte_grise(last_carte['numero_carte_grise'])
-            else:
-                numero_carte = generer_prochain_numero_carte_grise(None)
-            
-            # Génération du prochain numéro de plaque d'immatriculation
-            last_plaque = db.fetch_one("SELECT numero_immatriculation FROM cartes_grises ORDER BY id DESC LIMIT 1")
-            if last_plaque and last_plaque.get('numero_immatriculation'):
-                numero_plaque = generer_prochain_numero_plaque(last_plaque['numero_immatriculation'])
-            else:
-                numero_plaque = "AA100AA"
-            
-            # Vérification de l'unicité de la plaque - génération d'une nouvelle si doublon
-            max_attempts = 10  # Trouve généralement une plaque unique rapidement
-            attempts = 0
-            
-            while numero_plaque:
-                # Vérification si cette plaque existe déjà
-                existing = db.fetch_one("SELECT id FROM cartes_grises WHERE numero_immatriculation=%s", (numero_plaque,))
-                if not existing:  # Plaque unique trouvée
-                    break
-                
-                # Essai du prochain numéro de plaque
-                numero_plaque = generer_prochain_numero_plaque(numero_plaque)
-                attempts += 1
-                
-                if attempts >= max_attempts or numero_plaque is None:
-                    flash('Erreur: Impossible de générer un numéro de plaque unique!', 'error')
+            return render_template('add.html', modeles=modeles, form_data=form_data, prefilled=prefilled_data, selected_modele_id=modele_id)
+
+        # --- CAS 2 : Enregistrement de la nouvelle carte (clic sur 'Créer la Carte Grise') ---
+        if 'btn_save' in request.form:
+        
+            try:
+                # Récupération des données du formulaire
+                nom = str(escape(request.form.get('nom', '').strip()))
+                prenom = str(escape(request.form.get('prenom', '').strip()))
+                adresse = str(escape(request.form.get('adresse', '').strip()))
+                modele_id = request.form.get('modele_id')
+                date_premiere_immat = request.form.get('date_premiere_immat')
+                poids_vide = request.form.get('poids_vide')
+                poids_max = request.form.get('poids_max')
+                categorie_permis = request.form.get('categorie_permis')
+                cylindree = request.form.get('cylindree')
+                puissance_chevaux = request.form.get('puissance_chevaux')
+                places_assises = request.form.get('places_assises')
+                emission_co2 = request.form.get('emission_co2')
+
+                # Validation des champs obligatoires
+                if not all([nom, prenom, adresse, modele_id, date_premiere_immat]):
+                    flash('Les champs nom, prénom, adresse, modèle et date sont obligatoires!', 'error')
                     return redirect(url_for('add_carte_grise'))
             
-            if not numero_plaque:
-                flash('Erreur: Impossible de générer un numéro de plaque valide!', 'error')
-                return redirect(url_for('add_carte_grise'))
-            
-            # Génération du numéro de série du véhicule
-            modele_info = db.fetch_one("""
-                SELECT m.*, ma.numero_fabricant 
-                FROM modeles m 
-                JOIN marques ma ON m.marque_id = ma.id 
-                WHERE m.id = %s
-            """, (modele_id,))
-            
-            if not modele_info:
-                flash('Modèle de véhicule introuvable!', 'error')
-                return redirect(url_for('add_carte_grise'))
-            
-            date_obj = datetime.strptime(date_premiere_immat, '%Y-%m-%d')
-            # Récupération du nombre de véhicules immatriculés pour ce mois
-            count_query = """
-                SELECT COUNT(*) as count FROM cartes_grises 
-                WHERE numero_serie LIKE %s
-            """
-            pattern = f"{modele_info['numero_fabricant']}{date_obj.year}M{date_obj.month:02d}%"
-            count_result = db.fetch_one(count_query, (pattern,))
-            numero_vehicule = (count_result['count'] + 1) if count_result and count_result.get('count') is not None else 1
-            
-            numero_serie = generer_numero_serie(
-                modele_info['numero_fabricant'],
-                date_obj.year,
-                date_obj.month,
-                numero_vehicule
-            )
-            
-            # Insertion de la nouvelle carte grise en base de données
-            insert_carte = """
-                INSERT INTO cartes_grises (
-                    numero_carte_grise, numero_immatriculation, date_premiere_immat,
-                    proprietaire_id, est_conducteur, modele_id, numero_serie,
-                    poids_vide_kg, poids_max_kg, date_immat_actuelle, categorie_permis,
-                    cylindree_cm3, puissance_chevaux, places_assises, emission_co2_g_km
-                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            """
-            params = (
-                numero_carte, numero_plaque, date_premiere_immat,
-                proprietaire_id, True, modele_id, numero_serie,
-                poids_vide, poids_max, date_premiere_immat, categorie_permis,
-                cylindree if cylindree else None,
-                puissance_chevaux if puissance_chevaux else None,
-                places_assises if places_assises else None,
-                emission_co2 if emission_co2 else None
-            )
-            
-            if db.execute_query(insert_carte, params):
-                flash(f'Carte grise créée avec succès! Numéro: {numero_carte}, Plaque: {formater_numero_plaque(numero_plaque)}', 'success')
-                return redirect(url_for('index'))
-            else:
-                flash('Erreur lors de la création de la carte grise!', 'error')
+                # Vérification ou création du propriétaire
+                query_prop = "SELECT id FROM proprietaires WHERE nom=%s AND prenom=%s AND adresse=%s"
+                proprietaire = db.fetch_one(query_prop, (nom, prenom, adresse))
+                
+                if not proprietaire:
+                    insert_prop = "INSERT INTO proprietaires (nom, prenom, adresse) VALUES (%s, %s, %s)"
+                    proprietaire_id = db.execute_query(insert_prop, (nom, prenom, adresse))
+                else:
+                    proprietaire_id = proprietaire['id']
+                
+                # Génération du prochain numéro de carte grise
+                last_carte = db.fetch_one("SELECT numero_carte_grise FROM cartes_grises ORDER BY id DESC LIMIT 1")
+                if last_carte and last_carte.get('numero_carte_grise'):
+                    numero_carte = generer_prochain_numero_carte_grise(last_carte['numero_carte_grise'])
+                else:
+                    numero_carte = generer_prochain_numero_carte_grise(None)
+                
+                # Génération du prochain numéro de plaque d'immatriculation
+                last_plaque = db.fetch_one("SELECT numero_immatriculation FROM cartes_grises ORDER BY id DESC LIMIT 1")
+                if last_plaque and last_plaque.get('numero_immatriculation'):
+                    numero_plaque = generer_prochain_numero_plaque(last_plaque['numero_immatriculation'])
+                else:
+                    numero_plaque = "AA100AA"
+                
+                # Vérification de l'unicité de la plaque - génération d'une nouvelle si doublon
+                max_attempts = 10  # Trouve généralement une plaque unique rapidement
+                attempts = 0
+                
+                while numero_plaque:
+                    # Vérification si cette plaque existe déjà
+                    existing = db.fetch_one("SELECT id FROM cartes_grises WHERE numero_immatriculation=%s", (numero_plaque,))
+                    if not existing:  # Plaque unique trouvée
+                        break
+                    
+                    # Essai du prochain numéro de plaque
+                    numero_plaque = generer_prochain_numero_plaque(numero_plaque)
+                    attempts += 1
+                    
+                    if attempts >= max_attempts or numero_plaque is None:
+                        flash('Erreur: Impossible de générer un numéro de plaque unique!', 'error')
+                        return redirect(url_for('add_carte_grise'))
+                
+                if not numero_plaque:
+                    flash('Erreur: Impossible de générer un numéro de plaque valide!', 'error')
+                    return redirect(url_for('add_carte_grise'))
+                
+                # Génération du numéro de série du véhicule
+                modele_info = db.fetch_one("""
+                    SELECT m.*, ma.numero_fabricant 
+                    FROM modeles m 
+                    JOIN marques ma ON m.marque_id = ma.id 
+                    WHERE m.id = %s
+                """, (modele_id,))
+                
+                if not modele_info:
+                    flash('Modèle de véhicule introuvable!', 'error')
+                    return redirect(url_for('add_carte_grise'))
+                
+                date_obj = datetime.strptime(date_premiere_immat, '%Y-%m-%d')
+                # Récupération du nombre de véhicules immatriculés pour ce mois
+                count_query = """
+                    SELECT COUNT(*) as count FROM cartes_grises 
+                    WHERE numero_serie LIKE %s
+                """
+                pattern = f"{modele_info['numero_fabricant']}{date_obj.year}M{date_obj.month:02d}%"
+                count_result = db.fetch_one(count_query, (pattern,))
+                numero_vehicule = (count_result['count'] + 1) if count_result and count_result.get('count') is not None else 1
+                
+                numero_serie = generer_numero_serie(
+                    modele_info['numero_fabricant'],
+                    date_obj.year,
+                    date_obj.month,
+                    numero_vehicule
+                )
+                
+                # Insertion de la nouvelle carte grise en base de données
+                insert_carte = """
+                    INSERT INTO cartes_grises (
+                        numero_carte_grise, numero_immatriculation, date_premiere_immat,
+                        proprietaire_id, est_conducteur, modele_id, numero_serie,
+                        poids_vide_kg, poids_max_kg, date_immat_actuelle, categorie_permis,
+                        cylindree_cm3, puissance_chevaux, places_assises, emission_co2_g_km
+                    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """
+                params = (
+                    numero_carte, numero_plaque, date_premiere_immat,
+                    proprietaire_id, True, modele_id, numero_serie,
+                    poids_vide, poids_max, date_premiere_immat, categorie_permis,
+                    cylindree if cylindree else None,
+                    puissance_chevaux if puissance_chevaux else None,
+                    places_assises if places_assises else None,
+                    emission_co2 if emission_co2 else None
+                )
+                
+                if db.execute_query(insert_carte, params):
+                    flash(f'Carte grise créée avec succès! Numéro: {numero_carte}, Plaque: {formater_numero_plaque(numero_plaque)}', 'success')
+                    return redirect(url_for('index'))
+                else:
+                    flash('Erreur lors de la création de la carte grise!', 'error')
         
-        except Exception as e:
-            flash(f'Erreur: {str(e)}', 'error')
+            except Exception as e:
+                flash(f'Erreur: {str(e)}', 'error')
     
     # Récupération des modèles pour le menu déroulant
     modeles = db.fetch_all("""
