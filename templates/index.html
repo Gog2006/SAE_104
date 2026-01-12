@@ -27,6 +27,7 @@
                 <th>Permis</th>
                 <th>Poids (kg)</th>
                 <th>CO2 (g/km)</th>
+                <th>Classe Env.</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -41,6 +42,7 @@
                 <td>{{ carte.categorie_permis }}</td>
                 <td>{{ carte.poids_vide_kg }} / {{ carte.poids_max_kg }}</td>
                 <td>{{ carte.emission_co2_g_km if carte.emission_co2_g_km else 'N/A' }}</td>
+                <td>{{ carte.classe_environnementale if carte.classe_environnementale else 'N/A' }}</td>
                 <td>
                     <div class="actions">
                         <a href="{{ url_for('edit_carte_grise', carte_id=carte.id) }}" class="btn btn-small"> Modifier</a>

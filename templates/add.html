@@ -98,6 +98,12 @@
         <input type="number" id="emission_co2" name="emission_co2" min="0" placeholder="110"
                value="{{ prefilled.emission_co2 if prefilled else request.form.emission_co2 or '' }}">
     </div>
+    
+    <div class="form-group">
+        <label for="classe_environnementale">Classe Environnementale</label>
+        <input type="text" id="classe_environnementale" name="classe_environnementale" placeholder="Euro 6"
+               value="{{ prefilled.classe_environnementale if prefilled else request.form.classe_environnementale or '' }}">
+    </div>
  
  <h3 style="margin-top: 20px; color: var(--grey-color);">Informations du Propriétaire</h3>
     

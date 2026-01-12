@@ -68,51 +68,51 @@ def add_carte_grise():
     # Format: ID_MODELE: {'pv': poids_vide, 'pm': poids_max, 'permis': catégorie, 'pl': places, 'cyl': cylindrée, 'cv': chevaux, 'co2': émission}
     DONNEES_TECHNIQUES_REF = {
         # Honda
-        1: {'pv': 190, 'pm': 370, 'permis': 'A2', 'pl': 2, 'cyl': 471, 'cv': 48, 'co2': 80},   # CB500F
-        2: {'pv': 201, 'pm': 390, 'permis': 'A', 'pl': 2, 'cyl': 999, 'cv': 217, 'co2': 160},  # CBR1000RR
-        3: {'pv': 1300, 'pm': 1800, 'permis': 'B', 'pl': 5, 'cyl': 1498, 'cv': 182, 'co2': 128}, # Civic
-        4: {'pv': 1600, 'pm': 2200, 'permis': 'B', 'pl': 5, 'cyl': 1993, 'cv': 184, 'co2': 153}, # CR-V
-        5: {'pv': 2800, 'pm': 4500, 'permis': 'C', 'pl': 3, 'cyl': 2999, 'cv': 150, 'co2': 210}, # NT400
-        6: {'pv': 2600, 'pm': 3500, 'permis': 'C', 'pl': 3, 'cyl': 2488, 'cv': 130, 'co2': 220}, # Cabstar
+        1: {'pv': 190, 'pm': 370, 'permis': 'A2', 'pl': 2, 'cyl': 471, 'cv': 48, 'co2': 80, 'classe': 'Euro 5'},   # CB500F
+        2: {'pv': 201, 'pm': 390, 'permis': 'A', 'pl': 2, 'cyl': 999, 'cv': 217, 'co2': 160, 'classe': 'Euro 4'},  # CBR1000RR
+        3: {'pv': 1300, 'pm': 1800, 'permis': 'B', 'pl': 5, 'cyl': 1498, 'cv': 182, 'co2': 128, 'classe': 'Euro 6d'}, # Civic
+        4: {'pv': 1600, 'pm': 2200, 'permis': 'B', 'pl': 5, 'cyl': 1993, 'cv': 184, 'co2': 153, 'classe': 'Euro 6d'}, # CR-V
+        5: {'pv': 2800, 'pm': 4500, 'permis': 'C', 'pl': 3, 'cyl': 2999, 'cv': 150, 'co2': 210, 'classe': 'Euro 6'}, # NT400
+        6: {'pv': 2600, 'pm': 3500, 'permis': 'C', 'pl': 3, 'cyl': 2488, 'cv': 130, 'co2': 220, 'classe': 'Euro 6'}, # Cabstar
         # Peugeot
-        7: {'pv': 95, 'pm': 270, 'permis': 'A1', 'pl': 2, 'cyl': 49, 'cv': 4, 'co2': 45},     # Kisbee
-        8: {'pv': 280, 'pm': 450, 'permis': 'A', 'pl': 2, 'cyl': 399, 'cv': 36, 'co2': 89},    # Metropolis
-        9: {'pv': 1050, 'pm': 1550, 'permis': 'B', 'pl': 5, 'cyl': 1199, 'cv': 100, 'co2': 102}, # 208
-        10: {'pv': 1500, 'pm': 2100, 'permis': 'B', 'pl': 7, 'cyl': 1598, 'cv': 180, 'co2': 140},# 5008
-        11: {'pv': 2100, 'pm': 4400, 'permis': 'C', 'pl': 3, 'cyl': 2179, 'cv': 140, 'co2': 230},# Boxer
-        12: {'pv': 1800, 'pm': 3100, 'permis': 'C', 'pl': 3, 'cyl': 1997, 'cv': 145, 'co2': 190},# Expert
+        7: {'pv': 95, 'pm': 270, 'permis': 'A1', 'pl': 2, 'cyl': 49, 'cv': 4, 'co2': 45, 'classe': 'Euro 5'},     # Kisbee
+        8: {'pv': 280, 'pm': 450, 'permis': 'A', 'pl': 2, 'cyl': 399, 'cv': 36, 'co2': 89, 'classe': 'Euro 5'},    # Metropolis
+        9: {'pv': 1050, 'pm': 1550, 'permis': 'B', 'pl': 5, 'cyl': 1199, 'cv': 100, 'co2': 102, 'classe': 'Euro 6d'}, # 208
+        10: {'pv': 1500, 'pm': 2100, 'permis': 'B', 'pl': 7, 'cyl': 1598, 'cv': 180, 'co2': 140, 'classe': 'Euro 6d'},# 5008
+        11: {'pv': 2100, 'pm': 4400, 'permis': 'C', 'pl': 3, 'cyl': 2179, 'cv': 140, 'co2': 230, 'classe': 'Euro 6'},# Boxer
+        12: {'pv': 1800, 'pm': 3100, 'permis': 'C', 'pl': 3, 'cyl': 1997, 'cv': 145, 'co2': 190, 'classe': 'Euro 6'},# Expert
        
        # RENAULT (IDs 13 à 18)
-        13: {'pv': 120, 'pm': 300, 'permis': 'A1', 'pl': 2, 'cyl': 124, 'cv': 11, 'co2': 55},     # Full 125
-        14: {'pv': 160, 'pm': 340, 'permis': 'A2', 'pl': 2, 'cyl': 395, 'cv': 30, 'co2': 75},     # Sport 400
-        15: {'pv': 1100, 'pm': 1600, 'permis': 'B', 'pl': 5, 'cyl': 999, 'cv': 90, 'co2': 110},   # Clio
-        16: {'pv': 1400, 'pm': 1950, 'permis': 'B', 'pl': 5, 'cyl': 1332, 'cv': 140, 'co2': 130}, # Austral
-        17: {'pv': 2200, 'pm': 3500, 'permis': 'C', 'pl': 3, 'cyl': 2299, 'cv': 135, 'co2': 240}, # Master
-        18: {'pv': 2400, 'pm': 4500, 'permis': 'C', 'pl': 3, 'cyl': 2488, 'cv': 140, 'co2': 250}, # Maxity
+        13: {'pv': 120, 'pm': 300, 'permis': 'A1', 'pl': 2, 'cyl': 124, 'cv': 11, 'co2': 55, 'classe': 'Euro 5'},     # Full 125
+        14: {'pv': 160, 'pm': 340, 'permis': 'A2', 'pl': 2, 'cyl': 395, 'cv': 30, 'co2': 75, 'classe': 'Euro 5'},     # Sport 400
+        15: {'pv': 1100, 'pm': 1600, 'permis': 'B', 'pl': 5, 'cyl': 999, 'cv': 90, 'co2': 110, 'classe': 'Euro 6d'},   # Clio
+        16: {'pv': 1400, 'pm': 1950, 'permis': 'B', 'pl': 5, 'cyl': 1332, 'cv': 140, 'co2': 130, 'classe': 'Euro 6d'}, # Austral
+        17: {'pv': 2200, 'pm': 3500, 'permis': 'C', 'pl': 3, 'cyl': 2299, 'cv': 135, 'co2': 240, 'classe': 'Euro 6'}, # Master
+        18: {'pv': 2400, 'pm': 4500, 'permis': 'C', 'pl': 3, 'cyl': 2488, 'cv': 140, 'co2': 250, 'classe': 'Euro 6'}, # Maxity
 
        # MERCEDES (19-24)
-        19: {'pv': 130, 'pm': 310, 'permis': 'A1', 'pl': 2, 'cyl': 125, 'cv': 12, 'co2': 60},   # Citan Scooter
-        20: {'pv': 210, 'pm': 400, 'permis': 'A', 'pl': 2, 'cyl': 998, 'cv': 200, 'co2': 155},  # Vision GT
-        21: {'pv': 1350, 'pm': 1900, 'permis': 'B', 'pl': 5, 'cyl': 1461, 'cv': 116, 'co2': 120}, # Classe A
-        22: {'pv': 1800, 'pm': 2400, 'permis': 'B', 'pl': 5, 'cyl': 1993, 'cv': 190, 'co2': 160}, # GLC
-        23: {'pv': 2600, 'pm': 5000, 'permis': 'C', 'pl': 3, 'cyl': 2143, 'cv': 163, 'co2': 215}, # Sprinter 5t
-        24: {'pv': 2900, 'pm': 4800, 'permis': 'C', 'pl': 3, 'cyl': 4250, 'cv': 170, 'co2': 230}, # Vario
+        19: {'pv': 130, 'pm': 310, 'permis': 'A1', 'pl': 2, 'cyl': 125, 'cv': 12, 'co2': 60, 'classe': 'Euro 5'},   # Citan Scooter
+        20: {'pv': 210, 'pm': 400, 'permis': 'A', 'pl': 2, 'cyl': 998, 'cv': 200, 'co2': 155, 'classe': 'Euro 4'},  # Vision GT
+        21: {'pv': 1350, 'pm': 1900, 'permis': 'B', 'pl': 5, 'cyl': 1461, 'cv': 116, 'co2': 120, 'classe': 'Euro 6d'}, # Classe A
+        22: {'pv': 1800, 'pm': 2400, 'permis': 'B', 'pl': 5, 'cyl': 1993, 'cv': 190, 'co2': 160, 'classe': 'Euro 6d'}, # GLC
+        23: {'pv': 2600, 'pm': 5000, 'permis': 'C', 'pl': 3, 'cyl': 2143, 'cv': 163, 'co2': 215, 'classe': 'Euro 6'}, # Sprinter 5t
+        24: {'pv': 2900, 'pm': 4800, 'permis': 'C', 'pl': 3, 'cyl': 4250, 'cv': 170, 'co2': 230, 'classe': 'Euro 6'}, # Vario
 
         # IVECO (25-30)
-        25: {'pv': 150, 'pm': 330, 'permis': 'A2', 'pl': 2, 'cyl': 300, 'cv': 28, 'co2': 70},    # Daily Moto
-        26: {'pv': 220, 'pm': 420, 'permis': 'A', 'pl': 2, 'cyl': 1100, 'cv': 210, 'co2': 165},   # Turbo Bike
-        27: {'pv': 2000, 'pm': 2800, 'permis': 'B', 'pl': 5, 'cyl': 2998, 'cv': 176, 'co2': 200}, # Massif
-        28: {'pv': 1900, 'pm': 2600, 'permis': 'B', 'pl': 5, 'cyl': 2500, 'cv': 150, 'co2': 190}, # Campagnola
-        29: {'pv': 2200, 'pm': 3500, 'permis': 'C', 'pl': 3, 'cyl': 2300, 'cv': 140, 'co2': 225}, # Daily 35C
-        30: {'pv': 2500, 'pm': 5000, 'permis': 'C', 'pl': 3, 'cyl': 2998, 'cv': 180, 'co2': 245}, # Daily 50C
+        25: {'pv': 150, 'pm': 330, 'permis': 'A2', 'pl': 2, 'cyl': 300, 'cv': 28, 'co2': 70, 'classe': 'Euro 5'},    # Daily Moto
+        26: {'pv': 220, 'pm': 420, 'permis': 'A', 'pl': 2, 'cyl': 1100, 'cv': 210, 'co2': 165, 'classe': 'Euro 4'},   # Turbo Bike
+        27: {'pv': 2000, 'pm': 2800, 'permis': 'B', 'pl': 5, 'cyl': 2998, 'cv': 176, 'co2': 200, 'classe': 'Euro 6'}, # Massif
+        28: {'pv': 1900, 'pm': 2600, 'permis': 'B', 'pl': 5, 'cyl': 2500, 'cv': 150, 'co2': 190, 'classe': 'Euro 6'}, # Campagnola
+        29: {'pv': 2200, 'pm': 3500, 'permis': 'C', 'pl': 3, 'cyl': 2300, 'cv': 140, 'co2': 225, 'classe': 'Euro 6'}, # Daily 35C
+        30: {'pv': 2500, 'pm': 5000, 'permis': 'C', 'pl': 3, 'cyl': 2998, 'cv': 180, 'co2': 245, 'classe': 'Euro 6'}, # Daily 50C
 
         # FORD (31-36)
-        31: {'pv': 115, 'pm': 290, 'permis': 'A1', 'pl': 2, 'cyl': 125, 'cv': 10, 'co2': 50},    # Street 125
-        32: {'pv': 170, 'pm': 360, 'permis': 'A2', 'pl': 2, 'cyl': 450, 'cv': 35, 'co2': 78},    # Ranger Bike
-        33: {'pv': 1150, 'pm': 1650, 'permis': 'B', 'pl': 5, 'cyl': 999, 'cv': 95, 'co2': 115},   # Fiesta
-        34: {'pv': 1300, 'pm': 1850, 'permis': 'B', 'pl': 5, 'cyl': 1498, 'cv': 120, 'co2': 125}, # Focus
-        35: {'pv': 2100, 'pm': 3500, 'permis': 'C', 'pl': 3, 'cyl': 1995, 'cv': 130, 'co2': 210}, # Transit 350
-        36: {'pv': 2800, 'pm': 4700, 'permis': 'C', 'pl': 3, 'cyl': 1995, 'cv': 170, 'co2': 245}, # Transit 470
+        31: {'pv': 115, 'pm': 290, 'permis': 'A1', 'pl': 2, 'cyl': 125, 'cv': 10, 'co2': 50, 'classe': 'Euro 5'},    # Street 125
+        32: {'pv': 170, 'pm': 360, 'permis': 'A2', 'pl': 2, 'cyl': 450, 'cv': 35, 'co2': 78, 'classe': 'Euro 5'},    # Ranger Bike
+        33: {'pv': 1150, 'pm': 1650, 'permis': 'B', 'pl': 5, 'cyl': 999, 'cv': 95, 'co2': 115, 'classe': 'Euro 6d'},   # Fiesta
+        34: {'pv': 1300, 'pm': 1850, 'permis': 'B', 'pl': 5, 'cyl': 1498, 'cv': 120, 'co2': 125, 'classe': 'Euro 6d'}, # Focus
+        35: {'pv': 2100, 'pm': 3500, 'permis': 'C', 'pl': 3, 'cyl': 1995, 'cv': 130, 'co2': 210, 'classe': 'Euro 6'}, # Transit 350
+        36: {'pv': 2800, 'pm': 4700, 'permis': 'C', 'pl': 3, 'cyl': 1995, 'cv': 170, 'co2': 245, 'classe': 'Euro 6'}, # Transit 470
     }
 
 
@@ -142,7 +142,8 @@ def add_carte_grise():
                     'places_assises': ref.get('pl'),
                     'cylindree': ref.get('cyl'),
                     'puissance_chevaux': ref.get('cv'),
-                    'emission_co2': ref.get('co2')
+                    'emission_co2': ref.get('co2'),
+                    'classe_environnementale': ref.get('classe')
                 }
 
             # Réaffichage du formulaire avec les données pré-remplies
@@ -165,6 +166,7 @@ def add_carte_grise():
                 puissance_chevaux = request.form.get('puissance_chevaux')
                 places_assises = request.form.get('places_assises')
                 emission_co2 = request.form.get('emission_co2')
+                classe_env = str(escape(request.form.get('classe_environnementale', '').strip()))
 
                 # Validation des champs obligatoires
                 if not all([nom, prenom, adresse, modele_id, date_premiere_immat]):
@@ -252,8 +254,9 @@ def add_carte_grise():
                         numero_carte_grise, numero_immatriculation, date_premiere_immat,
                         proprietaire_id, est_conducteur, modele_id, numero_serie,
                         poids_vide_kg, poids_max_kg, date_immat_actuelle, categorie_permis,
-                        cylindree_cm3, puissance_chevaux, places_assises, emission_co2_g_km
-                    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                        cylindree_cm3, puissance_chevaux, places_assises, emission_co2_g_km,
+                        classe_environnementale
+                    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """
                 params = (
                     numero_carte, numero_plaque, date_premiere_immat,
@@ -262,7 +265,8 @@ def add_carte_grise():
                     cylindree if cylindree else None,
                     puissance_chevaux if puissance_chevaux else None,
                     places_assises if places_assises else None,
-                    emission_co2 if emission_co2 else None
+                    emission_co2 if emission_co2 else None,
+                    classe_env if classe_env else None
                 )
                 
                 if db.execute_query(insert_carte, params):
