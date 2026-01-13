@@ -1,11 +1,11 @@
 /* Variables de couleur personnalisées */
 :root {
     --primary-color: #6aa6d3;      /* Couleur primaire (bleu clair) */
-    --primary-hover: #000000;       /* Couleur primaire au survol */
+    --primary-hover: #00791e;       /* Couleur primaire au survol */
     --secondary-color: #0c226b;     /* Couleur secondaire (bleu foncé) */
     --success-color: #969696;       /* Couleur de succès (gris) */
     --danger-color: #7a0c00;        /* Couleur de danger (rouge foncé) */
-    --danger-hover: #c0392b;        /* Couleur de danger au survol */
+    --danger-hover: #e02813;        /* Couleur de danger au survol */
     --grey-color: #000000;          /* Couleur grise (noir) */
     --grey-hover: #c20000;          /* Couleur grise au survol */
 }
@@ -105,7 +105,7 @@ h4 {
 
 /* Effet au survol des boutons de succès */
 .btn-success:hover {
-    background: #b9154c;
+    background: #8f0936;
 }
 
 /* Bouton de danger */
@@ -133,17 +133,14 @@ h4 {
     margin-top: 12px;
     margin-left: auto;
     margin-right: 0;
+    padding: 10px 22px;
+    font-size: 14px;
 }
 /*. Application du gris au survol spécifiquement pour "Charger modèle" */
 .btn-load-right:hover {
     background: var(--success-color) !important; 
     color: white;
 }
-.btn-small {
-    padding: 10px 22px;
-    font-size: 14px;
-}
-
 .flash-messages {
     margin-bottom: 20px;
 }
@@ -203,6 +200,7 @@ label {
 input[type="text"],
 input[type="date"],
 input[type="number"],
+
 select {
     width: 100%;
     padding: 10px;
