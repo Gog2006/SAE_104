@@ -5,7 +5,7 @@
     --secondary-color: #0c226b;     /* Couleur secondaire (bleu foncé) */
     --success-color: #969696;       /* Couleur de succès (gris) */
     --danger-color: #7a0c00;        /* Couleur de danger (rouge foncé) */
-    --danger-hover: #c0392b;        /* Couleur de danger au survol */
+    --danger-hover: #e02813;        /* Couleur de danger au survol */
     --grey-color: #000000;          /* Couleur grise (noir) */
     --grey-hover: #c20000;          /* Couleur grise au survol */
 }
