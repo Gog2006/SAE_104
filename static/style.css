@@ -1,7 +1,7 @@
 /* Variables de couleur personnalisées */
 :root {
     --primary-color: #6aa6d3;      /* Couleur primaire (bleu clair) */
-    --primary-hover: #000000;       /* Couleur primaire au survol */
+    --primary-hover: #00791e;       /* Couleur primaire au survol */
     --secondary-color: #0c226b;     /* Couleur secondaire (bleu foncé) */
     --success-color: #969696;       /* Couleur de succès (gris) */
     --danger-color: #7a0c00;        /* Couleur de danger (rouge foncé) */
@@ -105,7 +105,7 @@ h4 {
 
 /* Effet au survol des boutons de succès */
 .btn-success:hover {
-    background: #b9154c;
+    background: #8f0936;
 }
 
 /* Bouton de danger */
