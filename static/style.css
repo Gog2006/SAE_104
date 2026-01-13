@@ -257,6 +257,25 @@ input:focus, select:focus {
     margin-left: 20px;
 }
 
+footer {
+    /* Mise en forme du texte */
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.9); /* Blanc*/
+    letter-spacing: 0.5px;
+
+    border-top: 1px solid #ffffff;
+
+    padding-bottom: 20px;
+    padding-top: 20px;
+    margin-top: 30px;
+    
+    /* Esthétique */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    width: 100%;
+}
+
 @media (max-width: 768px) {
     .form-row {
         grid-template-columns: 1fr;
