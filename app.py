@@ -495,6 +495,8 @@ def search():
         
         # Recherche par numéro de plaque
         elif search_type == 'plaque':
+            valeur_nettoyee = search_value.strip().upper()
+
             query = """
                 SELECT cg.*, p.nom, p.prenom, mo.modele, ma.nom as marque_nom
                 FROM cartes_grises cg
@@ -502,11 +504,14 @@ def search():
                 JOIN modeles mo ON cg.modele_id = mo.id
                 JOIN marques ma ON mo.marque_id = ma.id
                 WHERE cg.numero_immatriculation LIKE %s
+                OR
+                REPLACE(cg.numero_immatriculation, '-', '') LIKE %s
                 ORDER BY cg.numero_immatriculation
             """
-            cartes = db.fetch_all(query, (f'%{search_value}%',))
+            param = f'%{valeur_nettoyee}%'
+            cartes = db.fetch_all(query, (param, param))
         
-        # Recherche par marque - affiche les statistiques
+        # Recherche par marque - (Ordre décroissant)
         elif search_type == 'marque':
             query = """
                 SELECT ma.nom as marque_nom, COUNT(*) as count
@@ -517,6 +522,32 @@ def search():
                 ORDER BY count DESC
             """
             cartes = db.fetch_all(query)
+
+        # Lister le nombre de véhicules > X années avec pollution > Y
+        elif search_type == 'critere_complexe':
+            age_min = 5
+            co2_min = 120
+
+            if ',' in search_value:
+                try:
+                    parts = search_value.split(',')
+                    age_min = int(parts[0].strip())
+                    co2_min = int(parts[1].strip())
+                except:
+                    pass # On garde les valeurs par défaut si l'utilisateur écrit n'importe quoi
+
+            query = """
+                SELECT cg.*, p.nom, p.prenom, mo.modele, ma.nom as marque_nom,
+                       (YEAR(CURRENT_DATE) - YEAR(cg.date_premiere_immat)) as age_vehicule
+                FROM cartes_grises cg
+                JOIN proprietaires p ON cg.proprietaire_id = p.id
+                JOIN modeles mo ON cg.modele_id = mo.id
+                JOIN marques ma ON mo.marque_id = ma.id
+                WHERE (YEAR(CURRENT_DATE) - YEAR(cg.date_premiere_immat)) > %s
+                  AND cg.emission_co2_g_km > %s
+                ORDER BY cg.emission_co2_g_km DESC
+            """
+            cartes = db.fetch_all(query, (age_min, co2_min))
     
     return render_template('search.html', cartes=cartes)
 
