@@ -495,7 +495,7 @@ def search():
         
         # Recherche par numéro de plaque
         elif search_type == 'plaque':
-            valeur_nettoyee = search_value.strip().upper()
+            valeur_nettoyee = search_value.replace(' ', '').replace('-', '').strip().upper()
 
             query = """
                 SELECT cg.*, p.nom, p.prenom, mo.modele, ma.nom as marque_nom
