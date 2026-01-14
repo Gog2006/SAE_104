@@ -109,7 +109,7 @@ FLASK_PORT=5000
 
 #### Numéro de Plaque d'Immatriculation
 - Format: `AA000AA` (2 lettres + 3 chiffres + 2 lettres)
-- Les chiffres du milieu doivent être ≥ 10
+- Les chiffres du milieu doivent être ≥ 100
 - Exemples:
   - `AB 78 ZA` → `AB 78 ZB`
   - `AB 78 ZZ` → `AB 79 AA`
