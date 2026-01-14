@@ -16,7 +16,7 @@ from numero_generator import (
 import os
 from datetime import datetime
 
-# Initialisation de l'application Flask
+# Création de l'application Flask
 app = Flask(__name__)
 # Configuration de la clé secrète pour les sessions (CSRF, etc.)
 app.secret_key = os.getenv('SECRET_KEY', os.urandom(24).hex())
@@ -33,6 +33,7 @@ def before_request():
     """Connexion à la base de données avant chaque requête"""
     if not db.connection or not db.connection.is_connected():
         if not db.connect():
+            # 'flash' envoie un message temporaire à l'utilisateur (visible au prochain chargement de page)
             flash('Erreur de connexion à la base de données. Veuillez vérifier votre configuration.', 'error')
 
 # Hook exécuté après chaque requête HTTP
@@ -45,7 +46,10 @@ def teardown_db(exception=None):
 @app.route('/')
 def index():
     """Page d'accueil - Affiche toutes les cartes grises"""
-    # Requête pour récupérer les cartes grises avec les informations du propriétaire et du modèle
+    # Requête avec jointures (JOIN) pour récupérer les infos liées :
+    # - Le propriétaire (via proprietaires p)
+    # - Le modèle du véhicule (via modeles mo)
+    # - La marque (via marques ma)
     query = """
         SELECT cg.*, 
                p.nom, p.prenom, p.adresse,
@@ -62,9 +66,13 @@ def index():
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_carte_grise():
-    """Ajoute une nouvelle carte grise avec fonction d'auto-remplissage des caractéristiques"""
-
-    # Données techniques de référence pour chaque modèle
+   """
+    Page de création d'une carte grise.
+    Gère deux actions POST différentes : 
+    1. Pré-remplir les infos techniques ('Charger modèle').
+    2. Sauvegarder la carte en base ('Créer').
+    """
+    # Dictionnaire servant de "Base de données technique statique".
     # Format: ID_MODELE: {'pv': poids_vide, 'pm': poids_max, 'permis': catégorie, 'pl': places, 'cyl': cylindrée, 'cv': chevaux, 'co2': émission}
     DONNEES_TECHNIQUES_REF = {
         # Honda
@@ -129,12 +137,13 @@ def add_carte_grise():
     form_data = request.form
 
     if request.method == 'POST':
-        # --- CAS 1 : Clic sur 'Charger modèle' pour auto-remplir
+        # CAS 1 : L'utilisateur a cliqué sur "Charger les données du modèle"
+        # On ne sauvegarde rien, on recharge juste la page avec les champs pré-remplis.
         if 'btn_load' in request.form and 'modele_id' in request.form:
             modele_id = request.form.get('modele_id')
             if modele_id and int(modele_id) in DONNEES_TECHNIQUES_REF:
                 ref = DONNEES_TECHNIQUES_REF[int(modele_id)]
-                # Map reference keys to template field names
+                # Mapping des données de référence vers les noms des champs du formulaire
                 prefilled_data = {
                     'poids_vide': ref.get('pv'),
                     'poids_max': ref.get('pm'),
@@ -153,7 +162,8 @@ def add_carte_grise():
         if 'btn_save' in request.form:
         
             try:
-                # Récupération des données du formulaire
+               # 1. Nettoyage des données (Sécurité)
+                # On utilise escape() et strip() pour éviter les espaces vides et le code malveillant
                 nom = str(escape(request.form.get('nom', '').strip()))
                 prenom = str(escape(request.form.get('prenom', '').strip()))
                 adresse = str(escape(request.form.get('adresse', '').strip()))
@@ -182,6 +192,8 @@ def add_carte_grise():
                     proprietaire_id = db.execute_query(insert_prop, (nom, prenom, adresse))
                 else:
                     proprietaire_id = proprietaire['id']
+
+                # Génération des numéros
                 
                 # Génération du prochain numéro de carte grise
                 last_carte = db.fetch_one("SELECT numero_carte_grise FROM cartes_grises ORDER BY id DESC LIMIT 1")
@@ -220,6 +232,7 @@ def add_carte_grise():
                     return redirect(url_for('add_carte_grise'))
                 
                 # Génération du numéro de série du véhicule
+                # On récupère le code fabricant du modèle choisi
                 modele_info = db.fetch_one("""
                     SELECT m.*, ma.numero_fabricant 
                     FROM modeles m 
@@ -291,7 +304,10 @@ def add_carte_grise():
 
 @app.route('/edit/<int:carte_id>', methods=['GET', 'POST'])
 def edit_carte_grise(carte_id):
-    """Modification d'une carte grise existante"""
+   """
+    Modification d'une carte existante.
+    Note : Le processus est similaire à /add, mais avec des UPDATE SQL au lieu d'INSERT.
+    """
     
     # Données techniques de référence (same as add route)
     DONNEES_TECHNIQUES_REF = {
@@ -347,7 +363,6 @@ def edit_carte_grise(carte_id):
     selected_modele_id = None
     
     if request.method == 'POST':
-        # --- CAS 1 : Clic sur 'Charger modèle' pour auto-remplir
         if 'btn_load' in request.form and 'modele_id' in request.form:
             modele_id = request.form.get('modele_id')
             if modele_id and int(modele_id) in DONNEES_TECHNIQUES_REF:
@@ -379,7 +394,6 @@ def edit_carte_grise(carte_id):
             
             return render_template('edit.html', carte=carte, modeles=modeles, prefilled=prefilled_data, selected_modele_id=selected_modele_id)
         
-        # --- CAS 2 : Enregistrement des modifications
         try:
             # Récupération des données du formulaire
             nom = str(escape(request.form.get('nom', '').strip()))
@@ -462,6 +476,7 @@ def edit_carte_grise(carte_id):
 @app.route('/delete/<int:carte_id>', methods=['POST'])
 def delete_carte_grise(carte_id):
     """Suppression d'une carte grise"""
+    # Note : On ne supprime pas le propriétaire, car il peut avoir d'autres véhicules.
     query = "DELETE FROM cartes_grises WHERE id=%s"
     
     if db.execute_query(query, (carte_id,)):
@@ -476,12 +491,22 @@ def search():
     """Recherche et filtrage des cartes grises"""
     cartes = []
     
+    # Vérification : On ne traite que si le formulaire a été envoyé (méthode POST)
     if request.method == 'POST':
+
+        # Récupération des données du formulaire HTML
+        # request.form agit comme un dictionnaire contenant les inputs du formulaire
         search_type = request.form.get('search_type')
+
+        # .strip() est crucial : il nettoie les espaces invisibles avant et après la saisie
+        # Exemple : Si l'utilisateur tape " Dupont ", cela devient "Dupont"
         search_value = request.form.get('search_value', '').strip()
         
         # Recherche par nom du propriétaire
         if search_type == 'nom':
+            # Construction de la requête SQL avec jointures (JOIN)
+            # Les JOIN servent à récupérer les infos qui ne sont pas dans la table 'cartes_grises'
+            # (ex: le nom du propriétaire est dans la table 'proprietaires')
             query = """
                 SELECT cg.*, p.nom, p.prenom, mo.modele, ma.nom as marque_nom
                 FROM cartes_grises cg
@@ -491,12 +516,21 @@ def search():
                 WHERE p.nom LIKE %s
                 ORDER BY p.nom, p.prenom
             """
+            # Injection du paramètre avec des jokers (%) pour le LIKE SQL
+            # f'%{valeur}%' signifie : "Contient cette valeur n'importe où"
             cartes = db.fetch_all(query, (f'%{search_value}%',))
         
         # Recherche par numéro de plaque
+        # Logique : L'utilisateur peut écrire AA-123-BB ou AA123BB, le code doit comprendre les deux.
         elif search_type == 'plaque':
+            # 2. Normalisation (Nettoyage) en Python
+            # On retire les espaces et les tirets et on met tout en majuscules.
+            # Cela permet de comparer uniquement les caractères alphanumériques.
             valeur_nettoyee = search_value.replace(' ', '').replace('-', '').strip().upper()
 
+            # La requête SQL est astucieuse : elle compare deux choses
+            # 1. La plaque telle qu'elle est stockée (avec tirets)
+            # 2. La plaque stockée SANS tirets (via REPLACE SQL) pour matcher la saisie nettoyée
             query = """
                 SELECT cg.*, p.nom, p.prenom, mo.modele, ma.nom as marque_nom
                 FROM cartes_grises cg
@@ -524,18 +558,24 @@ def search():
             cartes = db.fetch_all(query)
 
         # Lister le nombre de véhicules > X années avec pollution > Y
+        # Logique : L'utilisateur entre deux chiffres séparés par une virgule (ex: "10, 150")
+        # Le premier est l'âge minimum, le second le CO2 minimum.
         elif search_type == 'critere_complexe':
+
+            # Valeurs par défaut (si l'utilisateur ne remplit rien)
             age_min = 5
             co2_min = 120
 
             if ',' in search_value:
                 try:
-                    parts = search_value.split(',')
-                    age_min = int(parts[0].strip())
-                    co2_min = int(parts[1].strip())
+                    parts = search_value.split(',')  # Divise "10, 150" en ["10", " 150"]
+                    age_min = int(parts[0].strip())  # Convertit "10" en entier 10
+                    co2_min = int(parts[1].strip())  # Convertit "150" en entier 150
                 except:
                     pass # On garde les valeurs par défaut si l'utilisateur écrit n'importe quoi
 
+                    # L'instruction YEAR(CURRENT_DATE) - YEAR(date) permet de calculer l'âge
+            # directement dans la base de données, sans avoir à le faire en Python.
             query = """
                 SELECT cg.*, p.nom, p.prenom, mo.modele, ma.nom as marque_nom,
                        (YEAR(CURRENT_DATE) - YEAR(cg.date_premiere_immat)) as age_vehicule
@@ -548,7 +588,7 @@ def search():
                 ORDER BY cg.emission_co2_g_km DESC
             """
             cartes = db.fetch_all(query, (age_min, co2_min))
-    
+    # Rendu final : on envoie la liste 'cartes' au template HTML
     return render_template('search.html', cartes=cartes)
 
 # Point d'entrée de l'application
