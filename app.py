@@ -613,6 +613,24 @@ def search():
             """
             cartes = db.fetch_all(query)
 
+        # Recherche par numéro VIN (numéro de série)
+        elif search_type == 'vin':
+            # Nettoyage de la valeur saisie : suppression des espaces
+            valeur_nettoyee = search_value.replace(' ', '').strip().upper()
+            
+            query = """
+                SELECT cg.*, p.nom, p.prenom, mo.modele, ma.nom as marque_nom
+                FROM cartes_grises cg
+                JOIN proprietaires p ON cg.proprietaire_id = p.id
+                JOIN modeles mo ON cg.modele_id = mo.id
+                JOIN marques ma ON mo.marque_id = ma.id
+                WHERE cg.numero_serie LIKE %s
+                ORDER BY cg.numero_serie
+            """
+            # Recherche partielle avec jokers pour permettre de chercher des fragments de VIN
+            param = f'%{valeur_nettoyee}%'
+            cartes = db.fetch_all(query, (param,))
+
         # Lister le nombre de véhicules > X années avec pollution > Y
         # Logique : L'utilisateur entre deux chiffres séparés par une virgule (ex: "10, 150")
         # Le premier est l'âge minimum, le second le CO2 minimum.

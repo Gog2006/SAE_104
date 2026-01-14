@@ -1,6 +1,6 @@
 # SAE 1.04 - Système de Gestion des Cartes Grises
 
-Système complet de gestion des cartes grises françaises - Base de données relationnelle avec interface web moderne et génération automatique de numéros.
+Système complet de gestion des cartes grises françaises - Base de données relationnelle avec interface web moderne, génération automatique de numéros et fonctionnalités VIN intégrées.
 
 ## Description du Projet
 
@@ -8,29 +8,39 @@ Ce projet implémente un système de gestion des cartes grises entièrement conf
 
 - **Gestion complète des cartes grises** avec tous les champs officiels français
 - **Auto-remplissage intelligent** des caractéristiques techniques par modèle
-- **Génération automatique** des numéros de cartes grises et plaques d'immatriculation
+- **Génération automatique** des numéros de cartes grises, plaques d'immatriculation et VIN
 - **Interface web moderne** avec formulaires complets et tableau de bord détaillé
 - **Base de données relationnelle** optimisée avec contraintes d'intégrité
 - **36 modèles de véhicules prédéfinis** avec spécifications techniques complètes
-- **Système de couleurs et dates de validité** intégré
+- **Système de couleurs, carburant/énergie et dates de validité** intégré
+- **Recherche avancée** incluant la recherche par numéro VIN
 
 ## Nouveautés et Améliorations
 
 ### Conformité Carte Grise Française Complète
-- **Tous les champs officiels** : Numéro VIN, couleur principale, puissance administrative CV, places debout
+- **Tous les champs officiels** : Numéro VIN complet, couleur principale, puissance administrative CV, places debout
+- **Carburant/Énergie** : Champ dédié avec auto-remplissage par modèle (Essence, Diesel, Hybride, Électrique)
 - **Dates de validité** : Certificat d'immatriculation, contrôles techniques programmés
 - **Caractéristiques techniques avancées** : Niveau sonore (dB), vitesse maximale moteur (RPM)
 - **Données techniques par défaut** pour 36 modèles de véhicules
 
+### Génération Automatique VIN
+- **VIN intelligent** : Génération automatique basée sur fabricant/date ou saisie manuelle
+- **Format réaliste** : VIN 17 caractères conformes ISO 3779 (ex: JHMFC26520S000001)
+- **Validation d'unicité** : Vérification automatique des doublons
+- **Affichage optimisé** : 8 derniers caractères visibles dans le tableau principal
+
 ### Auto-remplissage Intelligent
 - **Bouton "Charger modèle"** : Remplit automatiquement tous les champs techniques
-- **Données prédéfinies** : Poids, puissance, émissions, couleur, niveau sonore pour chaque modèle
+- **Données prédéfinies** : Poids, puissance, émissions, couleur, niveau sonore ET carburant pour chaque modèle
 - **Cohérence des données** : Spécifications réalistes par marque et type de véhicule
+- **UX optimisée** : Champs carburant non-obligatoires pour permettre le chargement de modèle
 
 ### Interface Enrichie
-- **Tableau de bord complet** : Affichage de 15+ informations par véhicule
-- **Index amélioré** : VIN, couleur, dates de validité, prochain contrôle technique
+- **Tableau de bord complet** : Affichage de 15+ informations par véhicule incluant VIN et carburant
+- **Index amélioré** : VIN (8 derniers caractères), carburant/énergie, couleur, dates de validité
 - **Formulaires complets** : Add/Edit avec tous les champs carte grise français
+- **Recherche étendue** : Recherche par nom, plaque, marque, critères complexes ET numéro VIN
 
 ## Structure de la Base de Données
 
@@ -48,8 +58,9 @@ Ce projet implémente un système de gestion des cartes grises entièrement conf
 - `numero_carte_grise` (0) - Numéro du certificat d'immatriculation
 - `numero_immatriculation` (A) - Numéro d'immatriculation
 - `date_premiere_immat` (B) - Date de première immatriculation 
-- `numero_vin` (E) - Numéro d'identification du véhicule
+- `numero_serie` (E) - Numéro d'identification du véhicule (VIN)
 - `couleur_principale` (C.1.3) - Couleur principale
+- `carburant_energie` - Type de carburant ou d'énergie du véhicule
 
 **Caractéristiques Techniques:**
 - `cylindree_cm3` (P1) - Cylindrée du moteur
@@ -191,9 +202,14 @@ Le système inclut une base de données technique de **36 modèles de véhicules
   - `AA999ZZ` → `AB100AA`
 
 #### Numéro de Série VIN
-- **Format**: `CodeFabricant + Année + Mois + Numéro6digits`
-- **Exemple**: `HON2024M05000001`, `PEU2024M03000002`
-- **Incrémentation**: Par mois et par fabricant
+- **Format automatique**: `CodeFabricant + Année + M + Mois + Numéro6digits`
+- **Exemples**: `PEU2026M01000001`, `HON2026M05000002`, `REN2026M12000157`
+- **Génération intelligente**: 
+  - Comptage automatique par fabricant/mois
+  - Évite les doublons par construction
+  - Utilise les vrais codes fabricant (PEU, REN, HON, MER, IVE, FOR)
+- **Flexibilité**: Auto-génération si champ vide OU saisie manuelle avec validation
+- **Format réaliste**: VIN 17 caractères conformes aux standards automobiles pour les exemples
 
 ### Interface Utilisateur Moderne
 
@@ -223,8 +239,10 @@ Le système inclut une base de données technique de **36 modèles de véhicules
 ### Recherche et Statistiques
 
 - **Par nom de propriétaire** - Recherche alphabétique
-- **Par numéro de plaque** - Recherche partielle (début, fin, milieu)  
+- **Par numéro de plaque** - Recherche partielle (début, fin, milieu)
+- **Par numéro VIN** - Recherche par numéro de série VIN complet ou partiel
 - **Statistiques par marque** - Classement par nombre de véhicules immatriculés
+- **Pollueurs anciens** - Filtrage par âge et émissions CO2
 
 ## Données Prédéfinies Complètes
 
@@ -236,14 +254,15 @@ Le système inclut une base de données technique de **36 modèles de véhicules
 ### Spécifications Techniques Réalistes
 - **Puissances** : 4 à 217 CV selon le type de véhicule
 - **Cylindrées** : 49 cm³ (scooter) à 4250 cm³ (camion)  
+- **Carburant/Énergie** : Essence, Diesel, Hybride, Électrique selon le modèle
 - **Couleurs** : Palette variée par marque (Blanc, Noir, Rouge, Bleu, Gris, Argent, Jaune, Orange, Vert)
 - **Niveaux sonores** : 67-106 dB selon la motorisation
 - **Régimes moteur** : 3600-13000 tr/min selon le type
 
 ### Exemples de Données
-- **Honda CB500F** : Rouge, 48 CV, 471 cm³, Permis A2, 95 dB, 8500 tr/min
-- **Peugeot 208** : Bleu, 100 CV, 1199 cm³, Permis B, 70 dB, 6200 tr/min  
-- **Mercedes Sprinter** : Argent, 163 CV, 2143 cm³, Permis C, 79 dB, 4500 tr/min
+- **Honda CB500F** : Rouge, 48 CV, 471 cm³, Essence, Permis A2, 95 dB, 8500 tr/min
+- **Peugeot 208** : Bleu, 100 CV, 1199 cm³, Essence, Permis B, 70 dB, 6200 tr/min  
+- **Mercedes Sprinter** : Argent, 163 CV, 2143 cm³, Diesel, Permis C, 79 dB, 4500 tr/min
 
 ## Sécurité
 
@@ -268,11 +287,14 @@ Ce projet dépasse largement les exigences de la SAE 1.04 :
 
 ### Extensions Avancées (Valeur Ajoutée)
 - **Conformité française complète** : Tous les champs carte grise officiels
-- **Auto-remplissage intelligent** : 36 modèles avec spécifications techniques
-- **Interface moderne et ergonomique** : Tableau de bord enrichi
-- **Génération automatique VIN** : Algorithme complet avec codes fabricant
+- **Auto-remplissage intelligent** : 36 modèles avec spécifications techniques et carburant
+- **Interface moderne et ergonomique** : Tableau de bord enrichi avec VIN et carburant
+- **Génération automatique VIN** : Algorithme complet avec codes fabricant et validation d'unicité
+- **Système de carburant/énergie** : Gestion complète des types d'énergie par véhicule
 - **Système de couleurs et dates** : Gestion complète validité/contrôles
+- **Recherche étendue** : Recherche par VIN en plus des critères classiques
 - **Sécurité renforcée** : Protection CSRF, échappement HTML, requêtes paramétrées
+- **Architecture modulaire** : Logic de génération centralisée dans numero_generator.py
 
 ## Structure du Projet
 
