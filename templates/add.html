@@ -71,6 +71,22 @@
         </div>
         
         <div class="form-group">
+            <label for="carburant_energie">Carburant/Énergie *</label>
+            <select id="carburant_energie" name="carburant_energie">
+                <option value="">-- Sélectionnez --</option>
+                {% set selected_carburant = prefilled.carburant_energie if prefilled else request.form.carburant_energie %}
+                <option value="Essence" {% if selected_carburant == 'Essence' %}selected{% endif %}>Essence</option>
+                <option value="Diesel" {% if selected_carburant == 'Diesel' %}selected{% endif %}>Diesel</option>
+                <option value="Électrique" {% if selected_carburant == 'Électrique' %}selected{% endif %}>Électrique</option>
+                <option value="Hybride" {% if selected_carburant == 'Hybride' %}selected{% endif %}>Hybride</option>
+                <option value="GPL" {% if selected_carburant == 'GPL' %}selected{% endif %}>GPL</option>
+                <option value="GNV" {% if selected_carburant == 'GNV' %}selected{% endif %}>GNV</option>
+                <option value="Éthanol" {% if selected_carburant == 'Éthanol' %}selected{% endif %}>Éthanol</option>
+            </select>
+        </div>
+    
+
+    <div class="form-row">
             <label for="places_assises">Nombre de places assises*</label>
             <input type="number" id="places_assises" name="places_assises" min="1" max="50" placeholder="5"
                    value="{{ prefilled.places_assises if prefilled else request.form.places_assises or '' }}">

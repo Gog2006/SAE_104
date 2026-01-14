@@ -47,8 +47,8 @@
                 <td>{{ carte.numero_vin[-8:] if carte.numero_vin else 'N/A' }}</td>
                 <td>{{ carte.date_immat_actuelle.strftime('%d/%m/%Y') if carte.date_immat_actuelle else 'N/A' }}</td>
                 <td>{{ carte.categorie_permis }}</td>
-                <td>{{ carte.puissance_admin_cv if carte.puissance_admin_cv else 'N/A' }}</td>
-                <td>{{ carte.energie_carburant if carte.energie_carburant else 'N/A' }}</td>
+                <td>{{ carte.puissance_chevaux if carte.puissance_chevaux else 'N/A' }}</td>
+                <td>{{ carte.carburant_energie if carte.carburant_energie else 'N/A' }}</td>
                 <td>{{ carte.poids_vide_kg }} / {{ carte.poids_max_kg }}</td>
                 <td>{{ carte.emission_co2_g_km if carte.emission_co2_g_km else 'N/A' }}</td>
                 <td>{{ carte.couleur_principale if carte.couleur_principale else 'N/A' }}</td>
