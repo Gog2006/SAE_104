@@ -104,6 +104,78 @@
         <input type="text" id="classe_environnementale" name="classe_environnementale" placeholder="Euro 6"
                value="{{ prefilled.classe_environnementale if prefilled else request.form.classe_environnementale or '' }}">
     </div>
+    
+    <div class="form-group">
+        <label for="couleur_principale">Couleur Principale</label>
+        <input type="text" id="couleur_principale" name="couleur_principale" placeholder="Blanc"
+               value="{{ prefilled.couleur_principale if prefilled else request.form.couleur_principale or '' }}">
+    </div>
+    
+    <div class="form-row">
+        <div class="form-group">
+            <label for="puissance_administrative_cv">Puissance Administrative (CV)</label>
+            <input type="number" id="puissance_administrative_cv" name="puissance_administrative_cv" min="0" placeholder="7"
+                   value="{{ prefilled.puissance_administrative_cv if prefilled else request.form.puissance_administrative_cv or '' }}">
+        </div>
+        
+        <div class="form-group">
+            <label for="places_debout">Places Debout</label>
+            <input type="number" id="places_debout" name="places_debout" min="0" max="50" placeholder="0"
+                   value="{{ prefilled.places_debout if prefilled else request.form.places_debout or '' }}">
+        </div>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-group">
+            <label for="niveau_sonore_db">Niveau Sonore à l'arrêt (dB)</label>
+            <input type="number" id="niveau_sonore_db" name="niveau_sonore_db" min="0" placeholder="75"
+                   value="{{ prefilled.niveau_sonore_db if prefilled else request.form.niveau_sonore_db or '' }}">
+        </div>
+        
+        <div class="form-group">
+            <label for="vitesse_max_moteur_rpm">Vitesse Max. Moteur (tr/min)</label>
+            <input type="number" id="vitesse_max_moteur_rpm" name="vitesse_max_moteur_rpm" min="0" placeholder="6500"
+                   value="{{ prefilled.vitesse_max_moteur_rpm if prefilled else request.form.vitesse_max_moteur_rpm or '' }}">
+        </div>
+    </div>
+    
+    <h3 style="margin-top: 20px; color: var(--grey-color);">Validité et Contrôles</h3>
+    
+    <div class="form-row">
+        <div class="form-group">
+            <label for="date_fin_validite">Date de fin de validité</label>
+            <input type="date" id="date_fin_validite" name="date_fin_validite">
+        </div>
+        
+        <div class="form-group">
+            <label for="date_validite_certificat">Date de Validité du Certificat</label>
+            <input type="date" id="date_validite_certificat" name="date_validite_certificat">
+        </div>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-group">
+            <label for="date_premier_controle">Premier Contrôle Technique</label>
+            <input type="date" id="date_premier_controle" name="date_premier_controle">
+        </div>
+        
+        <div class="form-group">
+            <label for="date_prochain_controle">Prochain Contrôle Technique</label>
+            <input type="date" id="date_prochain_controle" name="date_prochain_controle">
+        </div>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-group">
+            <label for="date_controle_2">Contrôle Technique 2</label>
+            <input type="date" id="date_controle_2" name="date_controle_2">
+        </div>
+        
+        <div class="form-group">
+            <label for="date_controle_3">Contrôle Technique 3</label>
+            <input type="date" id="date_controle_3" name="date_controle_3">
+        </div>
+    </div>
  
  <h3 style="margin-top: 20px; color: var(--grey-color);">Informations du Propriétaire</h3>
     

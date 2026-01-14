@@ -121,6 +121,73 @@
         </div>
     </div>
     
+    <div class="form-group">
+        <label for="couleur_principale">Couleur Principale</label>
+        <input type="text" id="couleur_principale" name="couleur_principale" value="{{ prefilled.couleur_principale if prefilled else (carte.couleur_principale if carte.couleur_principale else '') }}" placeholder="Blanc">
+    </div>
+    
+    <div class="form-row">
+        <div class="form-group">
+            <label for="puissance_administrative_cv">Puissance Administrative (CV)</label>
+            <input type="number" id="puissance_administrative_cv" name="puissance_administrative_cv" value="{{ prefilled.puissance_administrative_cv if prefilled else (carte.puissance_administrative_cv if carte.puissance_administrative_cv else '') }}" min="0" placeholder="7">
+        </div>
+        
+        <div class="form-group">
+            <label for="places_debout">Places Debout</label>
+            <input type="number" id="places_debout" name="places_debout" value="{{ prefilled.places_debout if prefilled else (carte.places_debout if carte.places_debout else '') }}" min="0" max="50" placeholder="0">
+        </div>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-group">
+            <label for="niveau_sonore_db">Niveau Sonore à l'arrêt (dB)</label>
+            <input type="number" id="niveau_sonore_db" name="niveau_sonore_db" value="{{ prefilled.niveau_sonore_db if prefilled else (carte.niveau_sonore_db if carte.niveau_sonore_db else '') }}" min="0" placeholder="75">
+        </div>
+        
+        <div class="form-group">
+            <label for="vitesse_max_moteur_rpm">Vitesse Max. Moteur (tr/min)</label>
+            <input type="number" id="vitesse_max_moteur_rpm" name="vitesse_max_moteur_rpm" value="{{ prefilled.vitesse_max_moteur_rpm if prefilled else (carte.vitesse_max_moteur_rpm if carte.vitesse_max_moteur_rpm else '') }}" min="0" placeholder="6500">
+        </div>
+    </div>
+    
+    <h3 style="margin-top: 20px; color: var(--grey-color);">Validité et Contrôles</h3>
+    
+    <div class="form-row">
+        <div class="form-group">
+            <label for="date_fin_validite">Date de fin de validité</label>
+            <input type="date" id="date_fin_validite" name="date_fin_validite" value="{{ carte.date_fin_validite.strftime('%Y-%m-%d') if carte.date_fin_validite else '' }}">
+        </div>
+        
+        <div class="form-group">
+            <label for="date_validite_certificat">Date de Validité du Certificat</label>
+            <input type="date" id="date_validite_certificat" name="date_validite_certificat" value="{{ carte.date_validite_certificat.strftime('%Y-%m-%d') if carte.date_validite_certificat else '' }}">
+        </div>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-group">
+            <label for="date_premier_controle">Premier Contrôle Technique</label>
+            <input type="date" id="date_premier_controle" name="date_premier_controle" value="{{ carte.date_premier_controle.strftime('%Y-%m-%d') if carte.date_premier_controle else '' }}">
+        </div>
+        
+        <div class="form-group">
+            <label for="date_prochain_controle">Prochain Contrôle Technique</label>
+            <input type="date" id="date_prochain_controle" name="date_prochain_controle" value="{{ carte.date_prochain_controle.strftime('%Y-%m-%d') if carte.date_prochain_controle else '' }}">
+        </div>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-group">
+            <label for="date_controle_2">Contrôle Technique 2</label>
+            <input type="date" id="date_controle_2" name="date_controle_2" value="{{ carte.date_controle_2.strftime('%Y-%m-%d') if carte.date_controle_2 else '' }}">
+        </div>
+        
+        <div class="form-group">
+            <label for="date_controle_3">Contrôle Technique 3</label>
+            <input type="date" id="date_controle_3" name="date_controle_3" value="{{ carte.date_controle_3.strftime('%Y-%m-%d') if carte.date_controle_3 else '' }}">
+        </div>
+    </div>
+    
     <div class="actions" style="margin-top: 30px;">
         <button type="submit" class="btn btn-success"> Mettre à jour</button>
         <a href="{{ url_for('index') }}" class="btn btn-secondary"> Annuler</a>

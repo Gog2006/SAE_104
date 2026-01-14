@@ -23,10 +23,16 @@
                 <th>Plaque</th>
                 <th>Propriétaire</th>
                 <th>Marque/Modèle</th>
+                <th>VIN</th>
                 <th>Date Immat.</th>
                 <th>Permis</th>
+                <th>Puissance (CV)</th>
+                <th>Carburant</th>
                 <th>Poids (kg)</th>
                 <th>CO2 (g/km)</th>
+                <th>Couleur</th>
+                <th>Validité Cert.</th>
+                <th>Prochain CT</th>
                 <th>Classe Env.</th>
                 <th>Actions</th>
             </tr>
@@ -38,10 +44,16 @@
                 <td><strong>{{ carte.numero_immatriculation[:2] }} {{ carte.numero_immatriculation[2:5] }} {{ carte.numero_immatriculation[5:] }}</strong></td>
                 <td>{{ carte.nom }} {{ carte.prenom }}</td>
                 <td>{{ carte.marque_nom }} {{ carte.modele }}</td>
+                <td>{{ carte.numero_vin[-8:] if carte.numero_vin else 'N/A' }}</td>
                 <td>{{ carte.date_immat_actuelle.strftime('%d/%m/%Y') if carte.date_immat_actuelle else 'N/A' }}</td>
                 <td>{{ carte.categorie_permis }}</td>
+                <td>{{ carte.puissance_admin_cv if carte.puissance_admin_cv else 'N/A' }}</td>
+                <td>{{ carte.energie_carburant if carte.energie_carburant else 'N/A' }}</td>
                 <td>{{ carte.poids_vide_kg }} / {{ carte.poids_max_kg }}</td>
                 <td>{{ carte.emission_co2_g_km if carte.emission_co2_g_km else 'N/A' }}</td>
+                <td>{{ carte.couleur_principale if carte.couleur_principale else 'N/A' }}</td>
+                <td>{{ carte.date_validite_certificat.strftime('%d/%m/%Y') if carte.date_validite_certificat else 'N/A' }}</td>
+                <td>{{ carte.date_prochain_controle.strftime('%d/%m/%Y') if carte.date_prochain_controle else 'N/A' }}</td>
                 <td>{{ carte.classe_environnementale if carte.classe_environnementale else 'N/A' }}</td>
                 <td>
                     <div class="actions">

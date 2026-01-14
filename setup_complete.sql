@@ -82,9 +82,24 @@ CREATE TABLE cartes_grises (
     categorie_permis VARCHAR(5) NOT NULL,
     cylindree_cm3 INT NOT NULL,
     puissance_chevaux INT NOT NULL,
+    puissance_administrative_cv INT,
     places_assises INT NOT NULL,
+    places_debout INT DEFAULT 0,
     emission_co2_g_km INT,
     classe_environnementale VARCHAR(20),
+    niveau_sonore_db INT,
+    vitesse_max_moteur_rpm INT,
+    couleur_principale VARCHAR(50),
+    date_validite_certificat DATE,
+    date_prochain_controle DATE,
+    date_fin_validite DATE,
+    date_premier_controle DATE,
+    date_controle_2 DATE,
+    date_controle_3 DATE,
+    date_controle_4 DATE,
+    date_controle_5 DATE,
+    date_controle_6 DATE,
+    date_controle_7 DATE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (proprietaire_id) REFERENCES proprietaires(id) ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY (modele_id) REFERENCES modeles(id) ON DELETE RESTRICT ON UPDATE CASCADE,
@@ -192,29 +207,36 @@ INSERT INTO proprietaires (nom, prenom, adresse) VALUES
 -- =========================
 -- Insert cartes grises
 -- =========================
-INSERT INTO cartes_grises (numero_carte_grise, numero_immatriculation, date_premiere_immat, date_immat_actuelle, proprietaire_id, est_conducteur, modele_id, numero_serie, poids_vide_kg, poids_max_kg, categorie_permis, cylindree_cm3, puissance_chevaux, places_assises, emission_co2_g_km, classe_environnementale) VALUES
+INSERT INTO cartes_grises (
+    numero_carte_grise, numero_immatriculation, date_premiere_immat, date_immat_actuelle, 
+    proprietaire_id, est_conducteur, modele_id, numero_serie, poids_vide_kg, poids_max_kg, 
+    categorie_permis, cylindree_cm3, puissance_chevaux, puissance_administrative_cv, 
+    places_assises, places_debout, emission_co2_g_km, classe_environnementale, 
+    niveau_sonore_db, vitesse_max_moteur_rpm, couleur_principale, date_fin_validite, 
+    date_premier_controle, date_validite_certificat, date_prochain_controle
+) VALUES
 -- Honda Civic (Automobile - B) - ID Modele: 3
-('2026AA00001', 'AB-100-CD', '2020-05-12', '2020-05-12', 1, TRUE, 3, 'HON2020M05000001', 1300, 1800, 'B', 1498, 182, 5, 128, 'Euro 6d'),
+('2026AA00001', 'AA100AA', '2020-05-12', '2020-05-12', 1, TRUE, 3, 'HON2020M05000001', 1300, 1800, 'B', 1498, 182, 12, 5, 0, 128, 'Euro 6d', 72, 6200, 'Blanc', '2030-05-12', '2024-05-12', '2030-05-12', '2024-05-12'),
 -- Honda CB500F (Deux roues - A2) - ID Modele: 1
-('2026AA00002', 'AB-101-CD', '2021-06-15', '2021-06-15', 2, TRUE, 1, 'HON2021M06000001', 190, 370, 'A2', 471, 48, 2, 80, 'Euro 5'),
+('2026AA00002', 'AA100AB', '2021-06-15', '2021-06-15', 2, TRUE, 1, 'HON2021M06000001', 190, 370, 'A2', 471, 48, 35, 2, 0, 80, 'Euro 5', 95, 8500, 'Rouge', '2031-06-15', '2024-06-15', '2031-06-15', '2024-06-15'),
 -- Peugeot 208 (Automobile - B) - ID Modele: 9
-('2026AA00003', 'PE-200-UG', '2022-03-20', '2022-03-20', 3, TRUE, 9, 'PEU2022M03000001', 1050, 1550, 'B', 1199, 100, 5, 102, 'Euro 6d'),
+('2026AA00003', 'AA100AC', '2022-03-20', '2022-03-20', 3, TRUE, 9, 'PEU2022M03000001', 1050, 1550, 'B', 1199, 100, 8, 5, 0, 102, 'Euro 6d', 70, 5800, 'Bleu', '2032-03-20', '2025-03-20', '2032-03-20', '2026-03-20'),
 -- Peugeot Boxer 440 (Camion léger - C) - ID Modele: 11
-('2026AA00004', 'PE-201-UG', '2021-11-05', '2021-11-05', 4, TRUE, 11, 'PEU2021M11000001', 2100, 4400, 'C', 2179, 140, 3, 230, 'Euro 6d'),
+('2026AA00004', 'AA100AD', '2021-11-05', '2021-11-05', 4, TRUE, 11, 'PEU2021M11000001', 2100, 4400, 'C', 2179, 140, 8, 3, 0, 230, 'Euro 6d', 74, 3500, 'Blanc', '2031-11-05', '2024-11-05', '2031-11-05', '2025-11-05'),
 -- Renault Clio (Automobile - B) - ID Modele: 15
-('2026AB00005', 'RE-300-NA', '2023-01-10', '2023-01-10', 5, TRUE, 15, 'REN2023M01000001', 1100, 1600, 'B', 999, 90, 5, 110, 'Euro 6d'),
+('2026AA00005', 'AA100AE', '2023-01-10', '2023-01-10', 5, TRUE, 15, 'REN2023M01000001', 1100, 1600, 'B', 999, 90, 6, 5, 0, 110, 'Euro 6d', 68, 5500, 'Gris', '2033-01-10', '2026-01-10', '2033-01-10', '2027-01-10'),
 -- Renault Master (Camion léger - C) - ID Modele: 17
-('2026AB00006', 'RE-301-NA', '2020-08-22', '2020-08-22', 6, TRUE, 17, 'REN2020M08000001', 2200, 3500, 'C', 2299, 135, 3, 240, 'Euro 6d'),
+('2026AA00006', 'AA100AF', '2020-08-22', '2020-08-22', 6, TRUE, 17, 'REN2020M08000001', 2200, 3500, 'C', 2299, 135, 8, 3, 0, 240, 'Euro 6d', 75, 3800, 'Jaune', '2030-08-22', '2024-08-22', '2030-08-22', '2025-08-22'),
 -- Mercedes Classe A (Automobile - B) - ID Modele: 21
-('2026AC00007', 'ME-400-RZ', '2024-04-15', '2024-04-15', 1, TRUE, 21, 'MER2024M04000001', 1400, 1950, 'B', 1332, 140, 5, 130, 'Euro 6d'),
+('2026AA00007', 'AA100AG', '2024-04-15', '2024-04-15', 1, TRUE, 21, 'MER2024M04000001', 1400, 1950, 'B', 1332, 140, 10, 5, 0, 130, 'Euro 6d', 69, 6000, 'Noir', '2034-04-15', '2027-04-15', '2034-04-15', '2028-04-15'),
 -- Mercedes Sprinter 5t (Camion léger - C) - ID Modele: 23
-('2026AC00008', 'ME-401-RZ', '2021-02-28', '2021-02-28', 2, TRUE, 23, 'MER2021M02000001', 2600, 5000, 'C', 2143, 163, 3, 215, 'Euro 6d'),
+('2026AA00008', 'AA100AH', '2021-02-28', '2021-02-28', 2, TRUE, 23, 'MER2021M02000001', 2600, 5000, 'C', 2143, 163, 9, 3, 0, 215, 'Euro 6d', 73, 3600, 'Argent', '2031-02-28', '2024-02-28', '2031-02-28', '2025-02-28'),
 -- Iveco Daily 35C (Camion léger - C) - ID Modele: 29
-('2026AD00009', 'IV-500-CO', '2022-10-12', '2022-10-12', 3, TRUE, 29, 'IVE2022M10000001', 2200, 3500, 'C', 2998, 160, 3, 225, 'Euro 6d'),
+('2026AA00009', 'AA100AI', '2022-10-12', '2022-10-12', 3, TRUE, 29, 'IVE2022M10000001', 2200, 3500, 'C', 2998, 160, 10, 3, 0, 225, 'Euro 6d', 76, 4000, 'Blanc', '2032-10-12', '2025-10-12', '2032-10-12', '2026-10-12'),
 -- Iveco Turbo Bike (Deux roues - A) - ID Modele: 26
-('2026AD00010', 'IV-501-CO', '2023-05-30', '2023-05-30', 4, TRUE, 26, 'IVE2023M05000001', 250, 450, 'A', 998, 120, 2, 110, 'Euro 5'),
+('2026AA00010', 'AA100AJ', '2023-05-30', '2023-05-30', 4, TRUE, 26, 'IVE2023M05000001', 250, 450, 'A', 998, 120, 80, 2, 0, 110, 'Euro 5', 98, 9000, 'Orange', '2033-05-30', '2026-05-30', '2033-05-30', '2027-05-30'),
 -- Ford Fiesta (Automobile - B) - ID Modele: 33
-('2026AE00011', 'FO-600-RD', '2020-12-01', '2020-12-01', 5, TRUE, 33, 'FOR2020M12000001', 1150, 1650, 'B', 999, 95, 5, 115, 'Euro 6d'),
+('2026AA00011', 'AA100AK', '2020-12-01', '2020-12-01', 5, TRUE, 33, 'FOR2020M12000001', 1150, 1650, 'B', 999, 95, 7, 5, 0, 115, 'Euro 6d', 67, 5400, 'Vert', '2030-12-01', '2023-12-01', '2030-12-01', '2024-12-01'),
 -- Ford Transit 470 (Camion léger - C) - ID Modele: 36
-('2026AE00012', 'FO-601-RD', '2021-07-18', '2021-07-18', 6, TRUE, 36, 'FOR2021M07000001', 2800, 4700, 'C', 1995, 170, 3, 245, 'Euro 6d');
+('2026AA00012', 'AA100AL', '2021-07-18', '2021-07-18', 6, TRUE, 36, 'FOR2021M07000001', 2800, 4700, 'C', 1995, 170, 11, 3, 0, 245, 'Euro 6d', 77, 4200, 'Bleu', '2031-07-18', '2024-07-18', '2031-07-18', '2025-07-18');
 
