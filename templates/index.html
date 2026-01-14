@@ -44,7 +44,7 @@
                 <td><strong>{{ carte.numero_immatriculation[:2] }} {{ carte.numero_immatriculation[2:5] }} {{ carte.numero_immatriculation[5:] }}</strong></td>
                 <td>{{ carte.nom }} {{ carte.prenom }}</td>
                 <td>{{ carte.marque_nom }} {{ carte.modele }}</td>
-                <td>{{ carte.numero_vin[-8:] if carte.numero_vin else 'N/A' }}</td>
+                <td>{{ carte.numero_serie[-8:] if carte.numero_serie else 'N/A' }}</td>
                 <td>{{ carte.date_immat_actuelle.strftime('%d/%m/%Y') if carte.date_immat_actuelle else 'N/A' }}</td>
                 <td>{{ carte.categorie_permis }}</td>
                 <td>{{ carte.puissance_chevaux if carte.puissance_chevaux else 'N/A' }}</td>

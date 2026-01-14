@@ -61,6 +61,13 @@
             <label for="date_premiere_immat">Date de Première Immatriculation *</label>
             <input type="date" id="date_premiere_immat" name="date_premiere_immat" required min="2020-01-01" max="2026-12-31" value="{{ carte.date_premiere_immat.strftime('%Y-%m-%d') if carte.date_premiere_immat else '' }}">
         </div>
+        
+        <div class="form-group">
+            <label for="numero_serie">Numéro VIN *</label>
+            <input type="text" id="numero_serie" name="numero_serie" maxlength="30" required
+                   value="{{ prefilled.numero_serie if prefilled else carte.numero_serie }}" placeholder="VIN du véhicule">
+            <small style="color: var(--grey-color);">Numéro d'identification du véhicule (VIN)</small>
+        </div>
     </div>
     
     <div class="form-row">

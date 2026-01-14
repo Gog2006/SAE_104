@@ -11,7 +11,10 @@ from numero_generator import (
     generer_prochain_numero_carte_grise,
     generer_prochain_numero_plaque,
     formater_numero_plaque,
-    generer_numero_serie
+    generer_numero_serie,
+    generer_numero_carte_grise_depuis_db,
+    generer_numero_plaque_unique_depuis_db,
+    generer_numero_serie_depuis_db
 )
 import os
 from datetime import datetime
@@ -171,6 +174,7 @@ def add_carte_grise():
                 adresse = str(escape(request.form.get('adresse', '').strip()))
                 modele_id = request.form.get('modele_id')
                 date_premiere_immat = request.form.get('date_premiere_immat')
+                numero_serie = str(escape(request.form.get('numero_serie', '').strip()))
                 poids_vide = request.form.get('poids_vide')
                 poids_max = request.form.get('poids_max')
                 categorie_permis = request.form.get('categorie_permis')
@@ -208,39 +212,13 @@ def add_carte_grise():
                 # Génération des numéros
                 
                 # Génération du prochain numéro de carte grise
-                last_carte = db.fetch_one("SELECT numero_carte_grise FROM cartes_grises ORDER BY id DESC LIMIT 1")
-                if last_carte and last_carte.get('numero_carte_grise'):
-                    numero_carte = generer_prochain_numero_carte_grise(last_carte['numero_carte_grise'])
-                else:
-                    numero_carte = generer_prochain_numero_carte_grise(None)
+                numero_carte = generer_numero_carte_grise_depuis_db(db)
                 
                 # Génération du prochain numéro de plaque d'immatriculation
-                last_plaque = db.fetch_one("SELECT numero_immatriculation FROM cartes_grises ORDER BY id DESC LIMIT 1")
-                if last_plaque and last_plaque.get('numero_immatriculation'):
-                    numero_plaque = generer_prochain_numero_plaque(last_plaque['numero_immatriculation'])
-                else:
-                    numero_plaque = "AA100AA"
-                
-                # Vérification de l'unicité de la plaque - génération d'une nouvelle si doublon
-                max_attempts = 10  # Trouve généralement une plaque unique rapidement
-                attempts = 0
-                
-                while numero_plaque:
-                    # Vérification si cette plaque existe déjà
-                    existing = db.fetch_one("SELECT id FROM cartes_grises WHERE numero_immatriculation=%s", (numero_plaque,))
-                    if not existing:  # Plaque unique trouvée
-                        break
-                    
-                    # Essai du prochain numéro de plaque
-                    numero_plaque = generer_prochain_numero_plaque(numero_plaque)
-                    attempts += 1
-                    
-                    if attempts >= max_attempts or numero_plaque is None:
-                        flash('Erreur: Impossible de générer un numéro de plaque unique!', 'error')
-                        return redirect(url_for('add_carte_grise'))
+                numero_plaque = generer_numero_plaque_unique_depuis_db(db)
                 
                 if not numero_plaque:
-                    flash('Erreur: Impossible de générer un numéro de plaque valide!', 'error')
+                    flash('Erreur: Impossible de générer un numéro de plaque unique!', 'error')
                     return redirect(url_for('add_carte_grise'))
                 
                 # Génération du numéro de série du véhicule
@@ -256,22 +234,17 @@ def add_carte_grise():
                     flash('Modèle de véhicule introuvable!', 'error')
                     return redirect(url_for('add_carte_grise'))
                 
-                date_obj = datetime.strptime(date_premiere_immat, '%Y-%m-%d')
-                # Récupération du nombre de véhicules immatriculés pour ce mois
-                count_query = """
-                    SELECT COUNT(*) as count FROM cartes_grises 
-                    WHERE numero_serie LIKE %s
-                """
-                pattern = f"{modele_info['numero_fabricant']}{date_obj.year}M{date_obj.month:02d}%"
-                count_result = db.fetch_one(count_query, (pattern,))
-                numero_vehicule = (count_result['count'] + 1) if count_result and count_result.get('count') is not None else 1
-                
-                numero_serie = generer_numero_serie(
-                    modele_info['numero_fabricant'],
-                    date_obj.year,
-                    date_obj.month,
-                    numero_vehicule
-                )
+                # Génération du numéro de série (VIN) si pas fourni par l'utilisateur
+                if numero_serie.strip():
+                    # Utiliser le VIN fourni par l'utilisateur
+                    # Vérifier qu'il n'existe pas déjà
+                    existing_vin = db.fetch_one("SELECT id FROM cartes_grises WHERE numero_serie=%s", (numero_serie,))
+                    if existing_vin:
+                        flash('Ce numéro VIN existe déjà dans la base de données!', 'error')
+                        return redirect(url_for('add_carte_grise'))
+                else:
+                    # Générer automatiquement le VIN
+                    numero_serie = generer_numero_serie_depuis_db(db, modele_info['numero_fabricant'], date_premiere_immat)
                 
                 # Insertion de la nouvelle carte grise en base de données
                 insert_carte = """
@@ -455,6 +428,7 @@ def edit_carte_grise(carte_id):
             adresse = str(escape(request.form.get('adresse', '').strip()))
             modele_id = request.form.get('modele_id')
             date_premiere_immat = request.form.get('date_premiere_immat')
+            numero_serie = str(escape(request.form.get('numero_serie', '').strip()))
             categorie_permis = request.form.get('categorie_permis')
             carburant_energie = str(escape(request.form.get('carburant_energie', '').strip()))
             poids_vide = request.form.get('poids_vide')
@@ -488,10 +462,17 @@ def edit_carte_grise(carte_id):
             else:
                 proprietaire_id = proprietaire['id']
             
+            # Vérification du VIN (ne doit pas exister pour d'autres véhicules)
+            if numero_serie.strip():
+                existing_vin = db.fetch_one("SELECT id FROM cartes_grises WHERE numero_serie=%s AND id!=%s", (numero_serie, carte_id))
+                if existing_vin:
+                    flash('Ce numéro VIN existe déjà pour un autre véhicule!', 'error')
+                    return redirect(url_for('edit_carte_grise', carte_id=carte_id))
+            
             # Mise à jour de la carte grise
             update_query = """
                 UPDATE cartes_grises 
-                SET proprietaire_id=%s, modele_id=%s, date_premiere_immat=%s, categorie_permis=%s,
+                SET proprietaire_id=%s, modele_id=%s, date_premiere_immat=%s, numero_serie=%s, categorie_permis=%s,
                     carburant_energie=%s, poids_vide_kg=%s, poids_max_kg=%s, places_assises=%s, places_debout=%s,
                     cylindree_cm3=%s, puissance_chevaux=%s, puissance_administrative_cv=%s,
                     emission_co2_g_km=%s, classe_environnementale=%s, niveau_sonore_db=%s,
@@ -500,7 +481,8 @@ def edit_carte_grise(carte_id):
                 WHERE id=%s
             """
             params = (
-                proprietaire_id, modele_id, date_premiere_immat, categorie_permis,
+                proprietaire_id, modele_id, date_premiere_immat, numero_serie,
+                categorie_permis,
                 carburant_energie if carburant_energie else None,
                 poids_vide, poids_max,
                 places_assises if places_assises else None,

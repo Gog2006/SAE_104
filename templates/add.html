@@ -40,6 +40,13 @@
             <label for="date_premiere_immat">Date de Première Immatriculation *</label>
             <input type="date" id="date_premiere_immat" name="date_premiere_immat" required min="2020-01-01" max="2026-12-31">
         </div>
+        
+        <div class="form-group">
+            <label for="numero_serie">Numéro VIN</label>
+            <input type="text" id="numero_serie" name="numero_serie" maxlength="30" placeholder="VIN (généré automatiquement si vide)" 
+                   value="{{ prefilled.numero_serie if prefilled else request.form.numero_serie or '' }}">
+            <small style="color: var(--grey-color);">Le numéro VIN sera généré automatiquement si ce champ est laissé vide</small>
+        </div>
     </div>
     
     <div class="form-row">
