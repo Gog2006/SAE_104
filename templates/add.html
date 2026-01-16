@@ -22,83 +22,83 @@
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     
     <h3 style="margin-top: 20px; color: var(--grey-color);">Informations du Véhicule</h3>
-    
-    <div class="form-row">
-        <div class="form-group">
-            <label for="modele_id">Marque et Modèle *</label>
-            <select id="modele_id" name="modele_id" required>
-                <option value="">-- Sélectionnez un modèle --</option>
-                {% for modele in modeles %}
-                <option value="{{ modele.id }}" {% if (selected_modele_id and selected_modele_id == (modele.id|string)) or (request.form.modele_id == (modele.id|string)) %}selected{% endif %}>{{ modele.marque_nom }} - {{ modele.modele }} ({{ modele.type_vehicule }})</option>
-                {% endfor %}
-                
-            </select>
-            <button type="submit" name="btn_load" class="btn btn-load-right">Charger modèle</button>
-        </div>
-        
-        <div class="form-group">
-            <label for="date_premiere_immat">Date de Première Immatriculation *</label>
-            <input type="date" id="date_premiere_immat" name="date_premiere_immat" required min="2020-01-01" max="2026-12-31">
-        </div>
-        
-        <div class="form-group">
-            <label for="numero_serie">Numéro VIN</label>
-            <input type="text" id="numero_serie" name="numero_serie" maxlength="30" placeholder="VIN (généré automatiquement si vide)" 
-                   value="{{ prefilled.numero_serie if prefilled else request.form.numero_serie or '' }}">
-            <small style="color: var(--grey-color);">Le numéro VIN sera généré automatiquement si ce champ est laissé vide</small>
-        </div>
-    </div>
-    
-    <div class="form-row">
-        <div class="form-group">
-            <label for="poids_vide">Poids à vide (kg) *</label>
-            <input type="number" id="poids_vide" name="poids_vide" required min="100" placeholder="1200"
-                   value="{{ prefilled.poids_vide if prefilled else request.form.poids_vide or '' }}">
-        </div>
-        
-        <div class="form-group">
-            <label for="poids_max">Poids maximal (kg) *</label>
-            <input type="number" id="poids_max" name="poids_max" required min="100" placeholder="1800"
-                   value="{{ prefilled.poids_max if prefilled else request.form.poids_max or '' }}">
-        </div>
-    </div>
-    
-    <div class="form-row">
-        <div class="form-group">
-            <label for="categorie_permis">Catégorie de Permis *</label>
-            <select id="categorie_permis" name="categorie_permis" required>
-                <option value="">-- Sélectionnez --</option>
-                {% set selected_permis = prefilled.categorie_permis if prefilled else request.form.categorie_permis %}
-                <option value="A1" {% if selected_permis == 'A1' %}selected{% endif %}>A1 - Moto légère</option>
-                <option value="A2" {% if selected_permis == 'A2' %}selected{% endif %}>A2 - Moto moyenne</option>
-                <option value="A"  {% if selected_permis == 'A' %}selected{% endif %}>A - Moto</option>
-                <option value="B"  {% if selected_permis == 'B' %}selected{% endif %}>B - Automobile</option>
-                <option value="C"  {% if selected_permis == 'C' %}selected{% endif %}>C - Camion léger</option>
-            </select>
-        </div>
-        
-        <div class="form-group">
-            <label for="carburant_energie">Carburant/Énergie *</label>
-            <select id="carburant_energie" name="carburant_energie">
-                <option value="">-- Sélectionnez --</option>
-                {% set selected_carburant = prefilled.carburant_energie if prefilled else request.form.carburant_energie %}
-                <option value="Essence" {% if selected_carburant == 'Essence' %}selected{% endif %}>Essence</option>
-                <option value="Diesel" {% if selected_carburant == 'Diesel' %}selected{% endif %}>Diesel</option>
-                <option value="Électrique" {% if selected_carburant == 'Électrique' %}selected{% endif %}>Électrique</option>
-                <option value="Hybride" {% if selected_carburant == 'Hybride' %}selected{% endif %}>Hybride</option>
-                <option value="GPL" {% if selected_carburant == 'GPL' %}selected{% endif %}>GPL</option>
-                <option value="GNV" {% if selected_carburant == 'GNV' %}selected{% endif %}>GNV</option>
-                <option value="Éthanol" {% if selected_carburant == 'Éthanol' %}selected{% endif %}>Éthanol</option>
-            </select>
-        </div>
-    
 
-    <div class="form-row">
-            <label for="places_assises">Nombre de places assises*</label>
-            <input type="number" id="places_assises" name="places_assises" min="1" max="50" placeholder="5"
-                   value="{{ prefilled.places_assises if prefilled else request.form.places_assises or '' }}">
-        </div>
+<div class="form-row">
+    <div class="form-group">
+        <label for="modele_id">Marque et Modèle *</label>
+        <select id="modele_id" name="modele_id" required>
+            <option value="">-- Sélectionnez un modèle --</option>
+            {% for modele in modeles %}
+            <option value="{{ modele.id }}" {% if (selected_modele_id and selected_modele_id == (modele.id|string)) or (request.form.modele_id == (modele.id|string)) %}selected{% endif %}>{{ modele.marque_nom }} - {{ modele.modele }} ({{ modele.type_vehicule }})</option>
+            {% endfor %}
+        </select>
+        <button type="submit" name="btn_load" class="btn btn-load-right">Charger modèle</button>
     </div>
+    
+    <div class="form-group">
+        <label for="date_premiere_immat">Date de Première Immatriculation *</label>
+        <input type="date" id="date_premiere_immat" name="date_premiere_immat" required min="2020-01-01" max="2026-12-31">
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label for="numero_serie">Numéro VIN</label>
+        <input type="text" id="numero_serie" name="numero_serie" maxlength="30" placeholder="VIN (généré automatiquement si vide)" 
+               value="{{ prefilled.numero_serie if prefilled else request.form.numero_serie or '' }}">
+        <small style="color: var(--grey-color);">Le numéro VIN sera généré automatiquement si vide</small>
+    </div>
+    
+    <div class="form-group">
+        <label for="places_assises">Nombre de places assises*</label>
+        <input type="number" id="places_assises" name="places_assises" min="1" max="50" placeholder="5"
+               value="{{ prefilled.places_assises if prefilled else request.form.places_assises or '' }}">
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label for="poids_vide">Poids à vide (kg) *</label>
+        <input type="number" id="poids_vide" name="poids_vide" required min="100" placeholder="1200"
+               value="{{ prefilled.poids_vide if prefilled else request.form.poids_vide or '' }}">
+    </div>
+    
+    <div class="form-group">
+        <label for="poids_max">Poids maximal (kg) *</label>
+        <input type="number" id="poids_max" name="poids_max" required min="100" placeholder="1800"
+               value="{{ prefilled.poids_max if prefilled else request.form.poids_max or '' }}">
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label for="categorie_permis">Catégorie de Permis *</label>
+        <select id="categorie_permis" name="categorie_permis" required>
+            <option value="">-- Sélectionnez --</option>
+            {% set selected_permis = prefilled.categorie_permis if prefilled else request.form.categorie_permis %}
+            <option value="A1" {% if selected_permis == 'A1' %}selected{% endif %}>A1 - Moto légère</option>
+            <option value="A2" {% if selected_permis == 'A2' %}selected{% endif %}>A2 - Moto moyenne</option>
+            <option value="A"  {% if selected_permis == 'A' %}selected{% endif %}>A - Moto</option>
+            <option value="B"  {% if selected_permis == 'B' %}selected{% endif %}>B - Automobile</option>
+            <option value="C"  {% if selected_permis == 'C' %}selected{% endif %}>C - Camion léger</option>
+        </select>
+    </div>
+    
+    <div class="form-group">
+        <label for="carburant_energie">Carburant/Énergie *</label>
+        <select id="carburant_energie" name="carburant_energie">
+            <option value="">-- Sélectionnez --</option>
+            {% set selected_carburant = prefilled.carburant_energie if prefilled else request.form.carburant_energie %}
+            <option value="Essence" {% if selected_carburant == 'Essence' %}selected{% endif %}>Essence</option>
+            <option value="Diesel" {% if selected_carburant == 'Diesel' %}selected{% endif %}>Diesel</option>
+            <option value="Électrique" {% if selected_carburant == 'Électrique' %}selected{% endif %}>Électrique</option>
+            <option value="Hybride" {% if selected_carburant == 'Hybride' %}selected{% endif %}>Hybride</option>
+            <option value="GPL" {% if selected_carburant == 'GPL' %}selected{% endif %}>GPL</option>
+            <option value="GNV" {% if selected_carburant == 'GNV' %}selected{% endif %}>GNV</option>
+            <option value="Éthanol" {% if selected_carburant == 'Éthanol' %}selected{% endif %}>Éthanol</option>
+        </select>
+    </div>
+</div>
 
     <h3 style="margin-top: 20px; color: var(--grey-color);">Caractéristiques Techniques </h3>
 

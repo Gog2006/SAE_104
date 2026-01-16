@@ -247,6 +247,8 @@ input:focus, select:focus {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
+    align-items: flex-start;
+
 }
 
 .table-wrapper {
