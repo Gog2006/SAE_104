@@ -177,36 +177,66 @@
     <div class="form-row">
         <div class="form-group">
             <label for="date_fin_validite">Date de fin de validité</label>
-            <input type="date" id="date_fin_validite" name="date_fin_validite" value="{{ carte.date_fin_validite.strftime('%Y-%m-%d') if carte.date_fin_validite else '' }}">
+            <input type="date" id="date_fin_validite" name="date_fin_validite" 
+                   value="{{ carte.date_fin_validite.strftime('%Y-%m-%d') if carte.date_fin_validite else '' }}"
+                   {% if carte.date_fin_validite and carte.date_fin_validite < date_today %}readonly class="readonly-field"{% endif %}>
+            {% if carte.date_fin_validite and carte.date_fin_validite < date_today %}
+            <small style="color: var(--danger-color);">Date expirée - Modification impossible</small>
+            {% endif %}
         </div>
         
         <div class="form-group">
             <label for="date_validite_certificat">Date de Validité du Certificat</label>
-            <input type="date" id="date_validite_certificat" name="date_validite_certificat" value="{{ carte.date_validite_certificat.strftime('%Y-%m-%d') if carte.date_validite_certificat else '' }}">
+            <input type="date" id="date_validite_certificat" name="date_validite_certificat" 
+                   value="{{ carte.date_validite_certificat.strftime('%Y-%m-%d') if carte.date_validite_certificat else '' }}"
+                   {% if carte.date_validite_certificat and carte.date_validite_certificat < date_today %}readonly class="readonly-field"{% endif %}>
+            {% if carte.date_validite_certificat and carte.date_validite_certificat < date_today %}
+            <small style="color: var(--danger-color);">Date expirée - Modification impossible</small>
+            {% endif %}
         </div>
     </div>
     
     <div class="form-row">
         <div class="form-group">
             <label for="date_premier_controle">Premier Contrôle Technique</label>
-            <input type="date" id="date_premier_controle" name="date_premier_controle" value="{{ carte.date_premier_controle.strftime('%Y-%m-%d') if carte.date_premier_controle else '' }}">
+            <input type="date" id="date_premier_controle" name="date_premier_controle" 
+                   value="{{ carte.date_premier_controle.strftime('%Y-%m-%d') if carte.date_premier_controle else '' }}"
+                   {% if carte.date_premier_controle %}readonly class="readonly-field"{% endif %}>
+            {% if carte.date_premier_controle %}
+            <small style="color: var(--warning-color);">Premier contrôle déjà effectué - Modification impossible</small>
+            {% endif %}
         </div>
         
         <div class="form-group">
             <label for="date_prochain_controle">Prochain Contrôle Technique</label>
-            <input type="date" id="date_prochain_controle" name="date_prochain_controle" value="{{ carte.date_prochain_controle.strftime('%Y-%m-%d') if carte.date_prochain_controle else '' }}">
+            <input type="date" id="date_prochain_controle" name="date_prochain_controle" 
+                   value="{{ carte.date_prochain_controle.strftime('%Y-%m-%d') if carte.date_prochain_controle else '' }}"
+                   {% if carte.date_prochain_controle and carte.date_prochain_controle < date_today %}readonly class="readonly-field"{% endif %}>
+            {% if carte.date_prochain_controle and carte.date_prochain_controle < date_today %}
+            <small style="color: var(--danger-color);">Contrôle en retard - Contactez les services techniques</small>
+            {% endif %}
         </div>
     </div>
     
     <div class="form-row">
         <div class="form-group">
             <label for="date_controle_2">Contrôle Technique 2</label>
-            <input type="date" id="date_controle_2" name="date_controle_2" value="{{ carte.date_controle_2.strftime('%Y-%m-%d') if carte.date_controle_2 else '' }}">
+            <input type="date" id="date_controle_2" name="date_controle_2" 
+                   value="{{ carte.date_controle_2.strftime('%Y-%m-%d') if carte.date_controle_2 else '' }}"
+                   {% if carte.date_controle_2 %}readonly class="readonly-field"{% endif %}>
+            {% if carte.date_controle_2 %}
+            <small style="color: var(--warning-color);">Contrôle déjà effectué - Modification impossible</small>
+            {% endif %}
         </div>
         
         <div class="form-group">
             <label for="date_controle_3">Contrôle Technique 3</label>
-            <input type="date" id="date_controle_3" name="date_controle_3" value="{{ carte.date_controle_3.strftime('%Y-%m-%d') if carte.date_controle_3 else '' }}">
+            <input type="date" id="date_controle_3" name="date_controle_3" 
+                   value="{{ carte.date_controle_3.strftime('%Y-%m-%d') if carte.date_controle_3 else '' }}"
+                   {% if carte.date_controle_3 %}readonly class="readonly-field"{% endif %}>
+            {% if carte.date_controle_3 %}
+            <small style="color: var(--warning-color);">Contrôle déjà effectué - Modification impossible</small>
+            {% endif %}
         </div>
     </div>
     

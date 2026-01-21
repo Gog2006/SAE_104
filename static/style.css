@@ -6,6 +6,7 @@
     --success-color: #969696;       /* Couleur de succès (gris) */
     --danger-color: #7a0c00;        /* Couleur de danger (rouge foncé) */
     --danger-hover: #e02813;        /* Couleur de danger au survol */
+    --warning-color: #bf7500;       /* Couleur d'avertissement (orange) */
     --grey-color: #000000;          /* Couleur grise (noir) */
     --grey-hover: #c20000;          /* Couleur grise au survol */
 }
@@ -290,4 +291,17 @@ footer {
     th, td {
         padding: 8px 5px;
     }
+}
+
+/* Style pour les champs en lecture seule */
+.readonly-field {
+    background-color: #f5f5f5 !important;
+    color: #666 !important;
+    cursor: not-allowed !important;
+    border: 1px solid #ddd !important;
+}
+
+.readonly-field:focus {
+    outline: none !important;
+    box-shadow: none !important;
 }

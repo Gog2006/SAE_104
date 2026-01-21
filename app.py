@@ -527,7 +527,10 @@ def edit_carte_grise(carte_id):
         flash('Carte grise introuvable!', 'error')
         return redirect(url_for('index'))
     
-    return render_template('edit.html', carte=carte, modeles=modeles, prefilled=prefilled_data, selected_modele_id=selected_modele_id)
+    # Import pour la date actuelle
+    from datetime import date
+    
+    return render_template('edit.html', carte=carte, modeles=modeles, prefilled=prefilled_data, selected_modele_id=selected_modele_id, date_today=date.today())
 
 @app.route('/delete/<int:carte_id>', methods=['POST'])
 def delete_carte_grise(carte_id):
