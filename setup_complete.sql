@@ -1,32 +1,24 @@
 
--- =========================
 -- Drop and Create Database
--- =========================
 DROP DATABASE IF EXISTS carte_grise_db;
 CREATE DATABASE carte_grise_db;
 USE carte_grise_db;
 
--- =========================
 -- Drop existing tables if they exist (in correct order due to foreign keys)
--- =========================
 DROP TABLE IF EXISTS cartes_grises;
 DROP TABLE IF EXISTS modeles;
 DROP TABLE IF EXISTS marques;
 DROP TABLE IF EXISTS categories_vehicule;
 DROP TABLE IF EXISTS proprietaires;
 
--- =========================
 -- Categories de vehicule
--- =========================
 CREATE TABLE categories_vehicule (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(50) NOT NULL UNIQUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- =========================
 -- Marques
--- =========================
 CREATE TABLE marques (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(100) NOT NULL UNIQUE,
@@ -34,9 +26,7 @@ CREATE TABLE marques (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- =========================
 -- Modeles
--- =========================
 CREATE TABLE modeles (
     id INT AUTO_INCREMENT PRIMARY KEY,
     modele VARCHAR(100) NOT NULL,
@@ -51,9 +41,7 @@ CREATE TABLE modeles (
     INDEX idx_modele_nom (modele)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- =========================
 -- Proprietaires
--- =========================
 CREATE TABLE proprietaires (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(100) NOT NULL,
@@ -64,9 +52,7 @@ CREATE TABLE proprietaires (
     INDEX idx_prenom_proprietaire (prenom)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- =========================
 -- Cartes grises
--- =========================
 CREATE TABLE cartes_grises (
     id INT AUTO_INCREMENT PRIMARY KEY,
     numero_carte_grise VARCHAR(20) NOT NULL UNIQUE,
@@ -117,17 +103,13 @@ CREATE TABLE cartes_grises (
     CHECK (emission_co2_g_km >= 0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- =========================
 -- Insert initial categories
--- =========================
 INSERT INTO categories_vehicule (nom) VALUES 
 ('Deux roues'),
 ('Automobile'),
 ('Camion léger');
 
--- =========================
 -- Insert initial marques with manufacturer numbers
--- =========================
 INSERT INTO marques (nom, numero_fabricant) VALUES 
 ('Honda', 'HON'),
 ('Peugeot', 'PEU'),
@@ -136,9 +118,9 @@ INSERT INTO marques (nom, numero_fabricant) VALUES
 ('Iveco', 'IVE'),
 ('Ford', 'FOR');
 
--- =========================
+
 -- Insert initial modeles
--- =========================
+
 
 -- Honda models
 INSERT INTO modeles (modele, marque_id, categorie_id, type_vehicule) VALUES 
@@ -194,9 +176,9 @@ INSERT INTO modeles (modele, marque_id, categorie_id, type_vehicule) VALUES
 ('Transit 350', 6, 3, 'Camion léger - C'),
 ('Transit 470', 6, 3, 'Camion léger - C');
 
--- =========================
--- Insert proprietaires (MUST be inserted BEFORE cartes_grises)
--- =========================
+
+-- Insert proprietaires 
+
 INSERT INTO proprietaires (nom, prenom, adresse) VALUES 
 ('Dupont', 'Jean', '12 Rue de Paris, 75001 Paris'),
 ('Martin', 'Sophie', '45 Avenue des Champs, 69000 Lyon'),
@@ -205,9 +187,9 @@ INSERT INTO proprietaires (nom, prenom, adresse) VALUES
 ('Thomas', 'Luc', '67 Avenue de la Liberté, 31000 Toulouse'),
 ('Robert', 'Claire', '34 Rue Nationale, 59000 Lille');
 
--- =========================
+
 -- Insert cartes grises
--- =========================
+
 INSERT INTO cartes_grises (
     numero_carte_grise, numero_immatriculation, date_premiere_immat, date_immat_actuelle, 
     proprietaire_id, est_conducteur, modele_id, numero_serie, poids_vide_kg, poids_max_kg, 
