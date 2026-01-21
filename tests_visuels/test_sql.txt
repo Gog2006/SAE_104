@@ -1,14 +1,5 @@
 # a) Liste CG par laps de temps de création
 
--- Cartes grises créées dans les 30 derniers jours
-SELECT *
-FROM cartes_grises cg
-JOIN proprietaires p ON cg.proprietaire_id = p.id
-JOIN modeles mo ON cg.modele_id = mo.id
-JOIN marques ma ON mo.marque_id = ma.id
-WHERE cg.created_at >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
-ORDER BY cg.created_at DESC;
-
 -- Cartes grises créées par période personnalisée
 SELECT *
 FROM cartes_grises cg
@@ -18,36 +9,9 @@ JOIN marques ma ON mo.marque_id = ma.id
 WHERE cg.created_at BETWEEN '2025-01-01' AND '2025-12-31'
 ORDER BY cg.created_at DESC;
 
--- Statistiques par mois de création
-SELECT *
-FROM cartes_grises cg
-GROUP BY YEAR(cg.created_at), MONTH(cg.created_at)
-ORDER BY annee DESC, mois DESC;
-
-
 # b) Lister CG par nom et prénom, ou séquence de caractère nom
 
 
--- Recherche par nom exact (insensible à la casse)
-SELECT *
-FROM cartes_grises cg
-JOIN proprietaires p ON cg.proprietaire_id = p.id
-JOIN modeles mo ON cg.modele_id = mo.id
-JOIN marques ma ON mo.marque_id = ma.id
-WHERE UPPER(p.nom) = UPPER('DUPONT')
-ORDER BY p.nom, p.prenom;
-
--- Recherche par nom et prénom combinés
-SELECT *
-FROM cartes_grises cg
-JOIN proprietaires p ON cg.proprietaire_id = p.id
-JOIN modeles mo ON cg.modele_id = mo.id
-JOIN marques ma ON mo.marque_id = ma.id
-WHERE UPPER(p.nom) = UPPER('MARTIN') 
-  AND UPPER(p.prenom) = UPPER('Jean')
-ORDER BY cg.created_at DESC;
-
--- Recherche par séquence de caractères dans le nom (LIKE)
 SELECT *
 FROM cartes_grises cg
 JOIN proprietaires p ON cg.proprietaire_id = p.id
@@ -57,31 +21,12 @@ WHERE p.nom LIKE '%MAR%'
    OR p.prenom LIKE '%MAR%'
 ORDER BY p.nom, p.prenom;
 
--- Recherche avancée par fragments de nom ou prénom
-SELECT *
-FROM cartes_grises cg
-JOIN proprietaires p ON cg.proprietaire_id = p.id
-JOIN modeles mo ON cg.modele_id = mo.id
-JOIN marques ma ON mo.marque_id = ma.id
-WHERE CONCAT(p.prenom, ' ', p.nom) LIKE '%Jean Mar%'
-   OR CONCAT(p.nom, ' ', p.prenom) LIKE '%Martin J%'
-ORDER BY p.nom, p.prenom;
-
 
 # c) Lister par numéro de plaque ou séquence de numéro de plaque
 
 
--- Recherche par numéro de plaque exact
 
-SELECT *
-FROM cartes_grises cg
-JOIN proprietaires p ON cg.proprietaire_id = p.id
-JOIN modeles mo ON cg.modele_id = mo.id
-JOIN marques ma ON mo.marque_id = ma.id
-WHERE cg.numero_immatriculation = 'AB123CD'
-ORDER BY cg.created_at DESC;
-
--- Recherche par début de plaque (ex: toutes les plaques commençant par "AB")
+-- Recherche par plaque 
 SELECT *
 FROM cartes_grises cg
 JOIN proprietaires p ON cg.proprietaire_id = p.id
@@ -89,6 +34,7 @@ JOIN modeles mo ON cg.modele_id = mo.id
 JOIN marques ma ON mo.marque_id = ma.id
 WHERE cg.numero_immatriculation LIKE 'AB%'
 ORDER BY cg.numero_immatriculation;
+
 
 -- Recherche par numéro dans la plaque (ex: toutes les plaques avec "123")
 SELECT *
@@ -99,42 +45,45 @@ JOIN marques ma ON mo.marque_id = ma.id
 WHERE cg.numero_immatriculation LIKE '%123%'
 ORDER BY cg.numero_immatriculation;
 
--- Recherche par pattern de plaque (ex: AB_123CD où _ peut être n'importe quel caractère)
-SELECT *
-FROM cartes_grises cg
-JOIN proprietaires p ON cg.proprietaire_id = p.id
-JOIN modeles mo ON cg.modele_id = mo.id
-JOIN marques ma ON mo.marque_id = ma.id
-WHERE cg.numero_immatriculation REGEXP '^[A-Z]{2}[0-9]{3}[A-Z]{2}$'
-ORDER BY cg.numero_immatriculation;
 
 
 # d) Lister par marque/modèle et par nb de véhicules immatriculés par marque
 
 
 -- Nombre de véhicules par marque
-SELECT *
+
+SELECT 
+    ma.nom AS marque,
+    COUNT(*) AS nombre_vehicules,
+    COUNT(DISTINCT mo.id) AS nombre_modeles_differents
 FROM cartes_grises cg
 JOIN modeles mo ON cg.modele_id = mo.id
 JOIN marques ma ON mo.marque_id = ma.id
 GROUP BY ma.nom
-ORDER BY nombre_vehicules DESC, marque;
+ORDER BY ma.nom;
 
 -- Nombre de véhicules par marque et modèle
-SELECT *
+
+SELECT 
+    ma.nom AS marque,
+    mo.modele,
+    mo.type_vehicule,
+    COUNT(*) AS nombre_vehicules
 FROM cartes_grises cg
 JOIN modeles mo ON cg.modele_id = mo.id
 JOIN marques ma ON mo.marque_id = ma.id
 GROUP BY ma.nom, mo.modele, mo.type_vehicule
-ORDER BY ma.nom, nombre_vehicules DESC;
+ORDER BY ma.nom;
 
 -- Top 5 des marques les plus immatriculées
-SELECT *
+SELECT 
+    ma.nom AS marque,
+    COUNT(*) AS nombre_vehicules
 FROM cartes_grises cg
 JOIN modeles mo ON cg.modele_id = mo.id
 JOIN marques ma ON mo.marque_id = ma.id
 GROUP BY ma.nom
-ORDER BY nombre_vehicules DESC
+ORDER BY COUNT(*) DESC
 LIMIT 5;
 
 -- Véhicules d'une marque spécifique avec détails
@@ -151,23 +100,15 @@ ORDER BY cg.date_premiere_immat DESC;
 
 
 -- Véhicules par année d'ancienneté
+
 SELECT *
 FROM cartes_grises cg
 JOIN modeles mo ON cg.modele_id = mo.id
 JOIN marques ma ON mo.marque_id = ma.id
-GROUP BY YEAR(cg.date_premiere_immat), ma.nom, mo.modele
-ORDER BY anciennete_annees DESC, nombre_vehicules DESC;
+ORDER BY YEAR(cg.date_premiere_immat) DESC;
 
--- Véhicules de plus de 5 ans
-SELECT *
-FROM cartes_grises cg
-JOIN modeles mo ON cg.modele_id = mo.id
-JOIN marques ma ON mo.marque_id = ma.id
-JOIN proprietaires p ON cg.proprietaire_id = p.id
-WHERE YEAR(CURDATE()) - YEAR(cg.date_premiere_immat) > 5
-ORDER BY anciennete_annees DESC;
 
--- Véhicules par degré de pollution (émissions CO2)
+-- Véhicules par degré de pollution 
 SELECT *
 FROM cartes_grises cg
 JOIN modeles mo ON cg.modele_id = mo.id
@@ -176,19 +117,25 @@ WHERE cg.emission_co2_g_km IS NOT NULL
 ORDER BY cg.emission_co2_g_km;
 
 -- Statistiques de pollution par classe environnementale
-SELECT *
+SELECT 
+    cg.classe_environnementale,
+    COUNT(*) AS nombre_vehicules,
+    AVG(cg.emission_co2_g_km) AS emission_co2_moyenne,
+    MIN(cg.emission_co2_g_km) AS emission_co2_min,
+    MAX(cg.emission_co2_g_km) AS emission_co2_max
 FROM cartes_grises cg
 WHERE cg.classe_environnementale IS NOT NULL 
   AND cg.emission_co2_g_km IS NOT NULL
 GROUP BY cg.classe_environnementale
-ORDER BY emission_co2_moyenne;
+ORDER BY cg.classe_environnementale;
 
 -- Véhicules électriques et hybrides (faible pollution)
+
 SELECT *
 FROM cartes_grises cg
 JOIN modeles mo ON cg.modele_id = mo.id
 JOIN marques ma ON mo.marque_id = ma.id
 JOIN proprietaires p ON cg.proprietaire_id = p.id
-WHERE cg.carburant_energie IN ('Électrique', 'Hybride')
+WHERE cg.carburant_energie IN ('Diesel')
 ORDER BY cg.carburant_energie, ma.nom;
 
