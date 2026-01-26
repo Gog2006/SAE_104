@@ -3,11 +3,11 @@
 -- Cartes grises créées par période personnalisée
 SELECT *
 FROM cartes_grises cg
-JOIN proprietaires p ON cg.proprietaire_id = p.id
-JOIN modeles mo ON cg.modele_id = mo.id
-JOIN marques ma ON mo.marque_id = ma.id
-WHERE cg.created_at BETWEEN '2025-01-01' AND '2025-12-31'
-ORDER BY cg.created_at DESC;
+JOIN proprietaires p on cg.proprietaire_id=p.id
+JOIN modeles mo on cg.modele_id=mo.id
+JOIN marques ma on mo.marque_id=ma.id
+WHERE cg.created_at BETWEEN '2000-01-01' AND '2030-01-01'
+ORDER by cg.created_at DESC;
 
 # b) Lister CG par nom et prénom, ou séquence de caractère nom
 
