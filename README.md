@@ -117,8 +117,15 @@ proprietaires <────────┘
 ### Prérequis
 
 - Python 3.7 ou supérieur
-- MySQL ou MariaDB
+- MySQL ou MariaDB (serveur et client)
 - phpMyAdmin (optionnel, pour la gestion de la base)
+
+**Sur Debian/Ubuntu:**
+```bash
+sudo apt update
+sudo apt install -y mariadb-server default-mysql-client
+sudo systemctl start mariadb
+```
 
 ### Étapes d'Installation
 
@@ -324,8 +331,15 @@ SAE_104/
 
 ### Prérequis
 - Python 3.7+ 
-- MySQL 8.0+ 
+- MySQL 8.0+ ou MariaDB 11.8+
 - Navigateur moderne (Chrome, Firefox, Safari, Edge)
+
+**Installation MySQL/MariaDB sur Debian/Ubuntu:**
+```bash
+sudo apt update
+sudo apt install -y mariadb-server default-mysql-client
+sudo systemctl start mariadb
+```
 
 ### Installation Rapide
 ```bash

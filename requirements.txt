@@ -1,4 +1,13 @@
+# Python dependencies
 Flask==3.0.0
 mysql-connector-python==9.0.0
 python-dotenv==1.0.0
 Flask-WTF==1.2.1
+
+# System dependencies (install via package manager):
+# - mariadb-server (or mysql-server)
+# - default-mysql-client (or mysql-client)
+#
+# On Debian/Ubuntu:
+#   sudo apt install -y mariadb-server default-mysql-client
+#   sudo systemctl start mariadb
