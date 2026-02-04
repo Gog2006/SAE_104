@@ -28,6 +28,12 @@ class Database:
         """Établit la connexion à la base de données MySQL (optimisée pour Vercel/Aiven)"""
         try:
             # Configuration pour Aiven MySQL avec SSL
+            ssl_config = {
+                'ssl_disabled': False,
+                'ssl_verify_cert': False,  # Désactive la vérification du certificat pour Aiven
+                'ssl_verify_identity': False
+            }
+            
             self.connection = mysql.connector.connect(
                 host=self.host,
                 user=self.user,
@@ -36,10 +42,7 @@ class Database:
                 port=self.port,
                 autocommit=True,  # Autocommit pour serverless (pas de transactions persistantes)
                 connection_timeout=10,  # Timeout réduit pour serverless
-                pool_size=1,  # Pas de pooling en serverless
-                pool_name='serverless_pool',
-                ssl_disabled=False,  # Active SSL pour Aiven
-                consume_results=True  # Consomme automatiquement les résultats
+                **ssl_config
             )
             
             if self.connection.is_connected():
