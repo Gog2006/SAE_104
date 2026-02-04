@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 class Database:
-    """Classe de gestion de la connexion et des opérations sur la base de données"""
+    """Classe de gestion de la connexion et des opérations sur la base de données (optimisée pour serverless)"""
     
     def __init__(self):
         # Récupération des paramètres de connexion depuis les variables d'environnement
@@ -25,26 +25,24 @@ class Database:
         self.connection = None
     
     def connect(self):
-        """Établit la connexion à la base de données MySQL"""
+        """Établit la connexion à la base de données MySQL (optimisée pour Vercel/Aiven)"""
         try:
+            # Configuration pour Aiven MySQL avec SSL
             self.connection = mysql.connector.connect(
                 host=self.host,
                 user=self.user,
                 password=self.password,
                 database=self.database,
                 port=self.port,
-                use_pure=True,  # Utilise l'implémentation pure Python (compatible avec tous les OS)
-                autocommit=False,  # Les transactions doivent être validées manuellement
-                connection_timeout=30,
-                get_warnings=False,
-                raise_on_warnings=False
+                autocommit=True,  # Autocommit pour serverless (pas de transactions persistantes)
+                connection_timeout=10,  # Timeout réduit pour serverless
+                pool_size=1,  # Pas de pooling en serverless
+                pool_name='serverless_pool',
+                ssl_disabled=False,  # Active SSL pour Aiven
+                consume_results=True  # Consomme automatiquement les résultats
             )
-            # Configuration des variables de session pour gérer les délais d'inactivité
+            
             if self.connection.is_connected():
-                cursor = self.connection.cursor()
-                cursor.execute("SET SESSION wait_timeout=28800")  # 8 heures
-                cursor.execute("SET SESSION interactive_timeout=28800")
-                cursor.close()
                 logger.info("Connexion réussie à la base de données MySQL")
                 return True
         except Error as e:
@@ -54,37 +52,24 @@ class Database:
     def _ensure_connection(self):
         """Vérifie que la connexion est active et la rétablit si nécessaire"""
         try:
-            if not self.connection:
-                logger.info("Pas de connexion, établissement de la connexion...")
+            if not self.connection or not self.connection.is_connected():
                 return self.connect()
-            
-            # Test si la connexion est active
-            if not self.connection.is_connected():
-                logger.info("Connexion perdue, tentative de reconnexion...")
-                self.disconnect()
-                self.connection = None
-                return self.connect()
-            
-            # Ping supplémentaire pour vérifier l'état du serveur
-            try:
-                self.connection.ping(reconnect=True, attempts=3, delay=1)
-            except Error as e:
-                logger.warning(f"Ping échoué: {e}, reconnexion en cours...")
-                self.disconnect()
-                self.connection = None
-                return self.connect()
-            
             return True
-        except Error as e:
+        except Exception as e:
             logger.error(f"Erreur lors de la vérification de la connexion: {e}")
-            self.connection = None
             return self.connect()
     
     def disconnect(self):
         """Ferme la connexion à la base de données"""
-        if self.connection and self.connection.is_connected():
-            self.connection.close()
-            logger.info("Connexion MySQL fermée")
+        try:
+            if self.connection and self.connection.is_connected():
+                self.connection.close()
+                logger.info("Connexion MySQL fermée")
+        except Exception as e:
+            logger.error(f"Erreur lors de la fermeture: {e}")
+        finally:
+            self.connection = None
+    
     
     def execute_query(self, query, params=None):
         """
@@ -97,36 +82,27 @@ class Database:
         Returns:
             ID de la dernière ligne insérée ou True si succès
         """
-        self._ensure_connection()
+        if not self._ensure_connection():
+            return False
+            
         cursor = None
         try:
-            cursor = self.connection.cursor(buffered=False)
+            cursor = self.connection.cursor()
             if params:
                 cursor.execute(query, params)
             else:
                 cursor.execute(query)
-            self.connection.commit()  # Validation de la transaction
             last_id = cursor.lastrowid
             return last_id if last_id else True
         except Error as e:
             logger.error(f"Erreur lors de l'exécution de la requête: {e}")
-            try:
-                self.connection.rollback()  # Annule la transaction en cas d'erreur
-            except Error as rollback_error:
-                logger.error(f"Erreur lors de l'annulation de la transaction: {rollback_error}")
-                # Force une reconnexion si l'annulation échoue
-                try:
-                    self.disconnect()
-                except:
-                    pass
-                self.connection = None
             return False
         finally:
             if cursor:
                 try:
                     cursor.close()
-                except Error as e:
-                    logger.error(f"Erreur lors de la fermeture du curseur: {e}")
+                except:
+                    pass
     
     def fetch_all(self, query, params=None):
         """
@@ -139,10 +115,12 @@ class Database:
         Returns:
             Liste de dictionnaires contenant les résultats
         """
-        self._ensure_connection()
+        if not self._ensure_connection():
+            return []
+            
         cursor = None
         try:
-            cursor = self.connection.cursor(dictionary=True, buffered=True)
+            cursor = self.connection.cursor(dictionary=True)
             if params:
                 cursor.execute(query, params)
             else:
@@ -151,19 +129,13 @@ class Database:
             return result
         except Error as e:
             logger.error(f"Erreur lors de la récupération des données: {e}")
-            # Force une reconnexion en cas d'erreur critique
-            try:
-                self.disconnect()
-            except:
-                pass
-            self.connection = None
             return []
         finally:
             if cursor:
                 try:
                     cursor.close()
-                except Error as e:
-                    logger.error(f"Erreur lors de la fermeture du curseur: {e}")
+                except:
+                    pass
     
     def fetch_one(self, query, params=None):
         """
@@ -176,10 +148,12 @@ class Database:
         Returns:
             Dictionnaire contenant le premier résultat ou None
         """
-        self._ensure_connection()
+        if not self._ensure_connection():
+            return None
+            
         cursor = None
         try:
-            cursor = self.connection.cursor(dictionary=True, buffered=True)
+            cursor = self.connection.cursor(dictionary=True)
             if params:
                 cursor.execute(query, params)
             else:
@@ -188,16 +162,11 @@ class Database:
             return result
         except Error as e:
             logger.error(f"Erreur lors de la récupération des données: {e}")
-            # Force une reconnexion en cas d'erreur critique
-            try:
-                self.disconnect()
-            except:
-                pass
-            self.connection = None
             return None
         finally:
             if cursor:
                 try:
                     cursor.close()
-                except Error as e:
-                    logger.error(f"Erreur lors de la fermeture du curseur: {e}")
+                except:
+                    pass
+
